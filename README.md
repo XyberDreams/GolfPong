@@ -1,21 +1,42 @@
-# React + TypeScript + Vite
+## useVisibilityControl Hook
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A reusable React hook for controlling the visibility (and optional fade/delay) of a THREE.Group in a React Three Fiber scene, based on your app state.
 
-While this project uses React, Vite supports many popular JS frameworks. [See all the supported frameworks](https://vitejs.dev/guide/#scaffolding-your-first-vite-project).
+### Usage
 
-## Deploy Your Own
+```tsx
+import { useRef } from "react";
+import useVisibilityControl from "./hooks/useVisibilityControl";
 
-Deploy your own Vite project with Vercel.
+const groupRef = useRef<THREE.Group>(null);
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/framework-boilerplates/vite-react&template=vite-react)
-
-_Live Example: https://vite-react-example.vercel.app_
-
-### Deploying From Your Terminal
-
-You can deploy your new Vite project with a single command from your terminal using [Vercel CLI](https://vercel.com/download):
-
-```shell
-$ vercel
+useVisibilityControl({
+  groupRef,
+  experienceState, // your current app state (string)
+  visibleStates: ["productInfo", "finish"], // states where group is visible
+  delayOnStates: ["intro"], // (optional) states to delay show/hide
+  delayMs: 1000, // (optional) delay in ms
+  delayOn: "hide", // (optional) "hide" or "show" (default: "hide")
+  fade: true, // (optional) fade in/out (default: true)
+  fadeDuration: 0.5, // (optional) fade duration in seconds (default: 0.5)
+});
 ```
+
+### Parameters
+
+| Prop            | Type                         | Description                              |
+| --------------- | ---------------------------- | ---------------------------------------- | --------------------------------------- |
+| groupRef        | React.RefObject<THREE.Group> | Ref to the group to control              |
+| experienceState | string                       | Current app state                        |
+| visibleStates   | string[]                     | States where the group should be visible |
+| delayOnStates   | string[] (optional)          | States to delay show/hide                |
+| delayMs         | number (optional)            | Delay in ms (default: 1000)              |
+| delayOn         | "hide"                       | "show" (optional)                        | Delay on hide or show (default: "hide") |
+| fade            | boolean (optional)           | Fade in/out (default: true)              |
+| fadeDuration    | number (optional)            | Fade duration in seconds (default: 0.5)  |
+
+### How it works
+
+- Fades or toggles visibility of the group when `experienceState` changes.
+- Optionally delays the visibility change for smoother transitions.
+- Only controls visibility/opacity—does not unmount the component.
