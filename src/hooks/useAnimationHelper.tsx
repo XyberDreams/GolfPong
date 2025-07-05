@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
@@ -10,7 +10,7 @@ export default function useAnimationHelper(
   names: string[],
   refs: RefMap
 ) {
-  const [hoveredMeshName, setHoveredMeshName] = useState<string | null>(null);
+  const [hoveredMeshName, setHoveredMeshName] = useState<string | null>(null); // Only for external use, not for scaling here
   const [pausePoints, setPausePoints] = useState<number[]>([]);
   const [currentPauseIndex, setCurrentPauseIndex] = useState(0);
   const [maxDuration, setMaxDuration] = useState(0);
@@ -160,7 +160,7 @@ export default function useAnimationHelper(
         timeScale >= 0 ? time >= threshold : time <= threshold;
       if (shouldPause) {
         // console.log(
-    
+
         //   `[Pause] "${name}" paused at time: ${time}, threshold: ${threshold}, timescale: ${timeScale}`
         // );
         action.paused = true;
@@ -182,31 +182,35 @@ export default function useAnimationHelper(
     }
   });
 
-  // Hover scaling
-  useFrame(() => {
-    if (!refs.current || !(refs.current instanceof THREE.Object3D)) return;
-    refs.current.traverse((child) => {
-      if (child instanceof THREE.Mesh) {
-        const isHovered = hoveredMeshName === child.name;
-        child.scale.lerp(
-          new THREE.Vector3(
-            isHovered ? 1.05 : 1,
-            isHovered ? 1.05 : 1,
-            isHovered ? 1.05 : 1
-          ),
-          0.1
-        );
-      }
-    });
-  });
+  // Memoize animation controls for stable references
+  const memoizedPlayAllClipsAndPause = useCallback(playAllClipsAndPause, [
+    actions,
+    names,
+  ]);
+  const memoizedContinueToNextPause = useCallback(continueToNextPause, [
+    actions,
+    names,
+    pausePoints,
+    maxDuration,
+  ]);
+  const memoizedPlayReverseFrom = useCallback(playReverseFrom, [
+    actions,
+    names,
+    maxDuration,
+  ]);
+  const memoizedPlayPartialClip = useCallback(playPartialClip, [
+    actions,
+    names,
+    maxDuration,
+  ]);
 
   return {
     groupRef,
     hoveredMeshName,
     setHoveredMeshName,
-    playAllClipsAndPause,
-    continueToNextPause,
-    playReverseFrom,
-    playPartialClip,
+    playAllClipsAndPause: memoizedPlayAllClipsAndPause,
+    continueToNextPause: memoizedContinueToNextPause,
+    playReverseFrom: memoizedPlayReverseFrom,
+    playPartialClip: memoizedPlayPartialClip,
   };
 }

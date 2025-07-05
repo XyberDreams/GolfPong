@@ -1,13 +1,15 @@
+import { Camera } from "@react-three/fiber";
 import React, { createContext, useState } from "react";
 import * as THREE from "three";
 
 // Generic types for 3D experience
 export type ExperienceStep = string;
 export type LightingPreset = string;
+export type CameraType = "blenderCamera" | "debugCamera" | "presetCamera";
 
 export interface ExperienceContextProps {
-  camera: THREE.PerspectiveCamera | null;
-  setCamera: (cam: THREE.PerspectiveCamera | null) => void;
+  activeCamera: CameraType;
+  setActiveCamera: (type: CameraType) => void;
   lighting: LightingPreset;
   setLighting: (preset: LightingPreset) => void;
   currentStep: ExperienceStep;
@@ -25,7 +27,7 @@ export const ExperienceProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [camera, setCamera] = useState<THREE.PerspectiveCamera | null>(null);
+  const [activeCamera, setActiveCamera] = useState<CameraType>('blenderCamera');
   const [lighting, setLighting] = useState<LightingPreset>("day");
   const [currentStep, setCurrentStep] = useState<ExperienceStep>("intro");
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,8 +35,8 @@ export const ExperienceProvider = ({
   return (
     <ExperienceContext.Provider
       value={{
-        camera,
-        setCamera,
+        activeCamera,
+        setActiveCamera,
         lighting,
         setLighting,
         currentStep,
