@@ -34,37 +34,35 @@ export default function BlenderCamera({
         importedCamera = cameras[0];
       }
       if (importedCamera) {
+        // Cast to PerspectiveCamera for type safety
+        const perspectiveCam = importedCamera as THREE.PerspectiveCamera & {
+          manual?: boolean;
+        };
 
-        // Ensure the imported camera is added to the scene
-        if (!scene.children.includes(importedCamera)) {
-          scene.add(importedCamera);
+        // Store original Blender camera values if not already stored
+        if (!perspectiveCam.userData.originalPosition) {
+          perspectiveCam.userData.originalPosition =
+            perspectiveCam.position.clone();
+          perspectiveCam.userData.originalRotation =
+            perspectiveCam.rotation.clone();
+          perspectiveCam.userData.originalQuaternion =
+            perspectiveCam.quaternion.clone();
+          perspectiveCam.userData.originalFov = perspectiveCam.fov;
         }
-        // --- Store original Blender camera values if not already stored ---
-        if (!importedCamera.userData.originalPosition) {
-          importedCamera.userData.originalPosition =
-            importedCamera.position.clone();
-          importedCamera.userData.originalRotation =
-            importedCamera.rotation.clone();
-          importedCamera.userData.originalQuaternion =
-            importedCamera.quaternion.clone();
-          importedCamera.userData.originalFov = importedCamera.fov;
-        }
-        // --- Reset camera transform to original Blender values ---
-        importedCamera.position.copy(importedCamera.userData.originalPosition);
-        importedCamera.rotation.copy(importedCamera.userData.originalRotation);
-        importedCamera.quaternion.copy(
-          importedCamera.userData.originalQuaternion
+        // Reset camera transform to original Blender values
+        perspectiveCam.position.copy(perspectiveCam.userData.originalPosition);
+        perspectiveCam.rotation.copy(perspectiveCam.userData.originalRotation);
+        perspectiveCam.quaternion.copy(
+          perspectiveCam.userData.originalQuaternion
         );
-        if (importedCamera.userData.originalFov) {
-          importedCamera.fov = importedCamera.userData.originalFov;
-          importedCamera.updateProjectionMatrix();
+        if (perspectiveCam.userData.originalFov) {
+          perspectiveCam.fov = perspectiveCam.userData.originalFov;
+          perspectiveCam.updateProjectionMatrix();
         }
         // Set imported camera as active in R3F
-        importedCamera.manual = true;
+        perspectiveCam.manual = true;
         set({
-          camera: importedCamera as unknown as THREE.PerspectiveCamera & {
-            manual?: boolean;
-          },
+          camera: perspectiveCam,
         });
       }
     } else {
