@@ -6,25 +6,35 @@ import * as THREE from "three";
 import cameraPresets from "../config/cameraPresets.json";
 
 export default function CameraManager() {
-  const { activeCamera, setActiveCamera } = useExperience();
+  const { activeCamera, setActiveCamera, currentState, setCurrentState } = useExperience();
   const { camera, set, scene } = useThree();
   const [activePreset, setActivePreset] = useState(cameraPresets[0]);
-   // Debug camera state (starts at "Leva" preset)
-   const debugCameraRef = useRef(new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000));
-  const presetCameraRef = useRef(new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000));
-  const levaPreset = cameraPresets.find(p => p.name === "Leva") || cameraPresets[0];
-    const [activePresetIndex, setActivePresetIndex] = useState(0);
+  const debugCameraRef = useRef(
+    new THREE.PerspectiveCamera(
+      50,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    )
+  );
+  const presetCameraRef = useRef(
+    new THREE.PerspectiveCamera(
+      50,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    )
+  );
+  const levaPreset =
+    cameraPresets.find((p) => p.name === "Leva") || cameraPresets[0];
+  const [activePresetIndex, setActivePresetIndex] = useState(0);
   const [debugCamState, setDebugCamState] = useState({
     position: { ...levaPreset.position },
     rotation: { ...levaPreset.rotation },
   });
 
-  // Camera switch buttons
-  useControls("Camera Switch", {
-    "Use Blender Camera": button(() => setActiveCamera("blenderCamera")),
-    "Use Preset Camera": button(() => setActiveCamera("presetCamera")),
-    "Use Debug Camera": button(() => setActiveCamera("debugCamera")),
-  });
+
+
 
   // Preset camera buttons (for preset camera only)
   useControls(

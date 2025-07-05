@@ -2,11 +2,71 @@
   {
     "name": "Leva",
     "position": { "x": -0.4, "y": 7.1, "z": 4.9 },
-    "rotation": { "x": -0.59, "y": 0, "z": -0.04 }
+    "rotation": { "x": -0.59, "y": 0, "z": -0.04 },
+    "fov": 38.5,
+    "near": 10,
+    "far": 6000,
+    "minAzimuthAngle": -0.5,
+    "maxAzimuthAngle": 0.5,
+    "minPolarAngle": 1.0,
+    "maxPolarAngle": 1.5,
+    "minDistance": 100,
+    "maxDistance": 400,
+    "draggingSmoothTime": 0.3
   },
   {
     "name": "Default",
     "position": { "x": 7.35, "y": 9.6, "z": 6.9 },
-    "rotation": { "x": -0.6, "y": 0.7, "z": 0.44 }
+    "rotation": { "x": -0.6, "y": 0.7, "z": 0.44 },
+    "fov": 50,
+    "near": 0.1,
+    "far": 1000,
+    "minAzimuthAngle": -1.0,
+    "maxAzimuthAngle": 1.0,
+    "minPolarAngle": 0.5,
+    "maxPolarAngle": 2.0,
+    "minDistance": 50,
+    "maxDistance": 500,
+    "draggingSmoothTime": 0.5
+  },
+  {
+    "name": "Scene",
+    "position": { "x": 8.35, "y": 4.6, "z": 6.9 },
+    "rotation": { "x": -0.6, "y": 1.7, "z": 0.44 }
+  },
+  {
+    "name": "intro",
+    "position": { "x": 290, "y": 152, "z": 168 },
+    "target": { "x": 6, "y": 4, "z": -19 },
+    "rotation": { "x": -0.59, "y": 0, "z": -0.04 },
+    "smoothTime": 0.5
+  },
+  {
+    "name": "main",
+    "position": { "x": -0.4, "y": 7.1, "z": 4.9 },
+    "rotation": { "x": -0.59, "y": 0, "z": -0.04 },
+
+    "target": { "x": -0.59, "y": 0, "z": -0.04 },
+
+    "smoothTime": 0.5
+  },
+  {
+    "name": "blender",
+    "position": {
+      "x": 7.358891487121582,
+      "y": 9.62240982055664,
+      "z": 6.925790786743164
+    },
+    "rotation": {
+      "x": -0.6273059488995305,
+      "y": 0.7096367512124331,
+      "z": 0.44130642141584975
+    },
+    "target": {
+      "x": 6.707333233130607,
+      "y": 9.177138418196572,
+      "z": 6.311620435866041
+    },
+    "fov": 22.89519204617112
   }
 ]

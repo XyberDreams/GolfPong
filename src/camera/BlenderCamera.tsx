@@ -34,50 +34,38 @@ export default function BlenderCamera({
         importedCamera = cameras[0];
       }
       if (importedCamera) {
-        // Remove debug camera if present
-        const debugCamera = scene.children.find(
-          (obj) =>
-            obj instanceof THREE.PerspectiveCamera && obj.name === "DebugCamera"
-        );
-        if (debugCamera) {
-          scene.remove(debugCamera);
-        }
+
         // Ensure the imported camera is added to the scene
         if (!scene.children.includes(importedCamera)) {
           scene.add(importedCamera);
         }
+        // --- Store original Blender camera values if not already stored ---
+        if (!importedCamera.userData.originalPosition) {
+          importedCamera.userData.originalPosition =
+            importedCamera.position.clone();
+          importedCamera.userData.originalRotation =
+            importedCamera.rotation.clone();
+          importedCamera.userData.originalQuaternion =
+            importedCamera.quaternion.clone();
+          importedCamera.userData.originalFov = importedCamera.fov;
+        }
+        // --- Reset camera transform to original Blender values ---
+        importedCamera.position.copy(importedCamera.userData.originalPosition);
+        importedCamera.rotation.copy(importedCamera.userData.originalRotation);
+        importedCamera.quaternion.copy(
+          importedCamera.userData.originalQuaternion
+        );
+        if (importedCamera.userData.originalFov) {
+          importedCamera.fov = importedCamera.userData.originalFov;
+          importedCamera.updateProjectionMatrix();
+        }
         // Set imported camera as active in R3F
-        // Type assertion to satisfy R3F's set({ camera })
+        importedCamera.manual = true;
         set({
           camera: importedCamera as unknown as THREE.PerspectiveCamera & {
             manual?: boolean;
           },
         });
-        // Wait for next animation frame to log the updated camera
-        requestAnimationFrame(() => {
-          // Get the latest camera from useThree
-          const currentCamera =
-            scene.userData.__r3fRoot?.store.getState().camera || camera;
-          if (importedCamera) {
-            console.log("R3F camera after set (from store):", currentCamera);
-            console.log(
-              "UUID match?",
-              currentCamera.uuid === importedCamera.uuid
-            );
-          }
-        });
-        // Logging for debug
-        console.log(
-          "BlenderCamera: Using imported camera:",
-          importedCamera.name || "[unnamed]",
-          importedCamera
-        );
-        console.log("Position:", importedCamera.position);
-        console.log("Rotation (Euler):", importedCamera.rotation);
-        console.log("Quaternion:", importedCamera.quaternion);
-        if ((importedCamera as any).fov) {
-          console.log("FOV:", (importedCamera as any).fov);
-        }
       }
     } else {
       console.warn("BlenderCamera: No cameras found in GLTF file!", modelPath);
@@ -104,6 +92,14 @@ export default function BlenderCamera({
         if ((importedCamera as any).fov) {
           console.log("FOV:", (importedCamera as any).fov);
         }
+        // --- Compute and log the target ---
+        // Forward vector in camera space is (0, 0, -1)
+        const forward = new THREE.Vector3(0, 0, -1);
+        // Apply rotation to forward vector
+        forward.applyEuler(importedCamera.rotation);
+        // Compute target
+        const target = importedCamera.position.clone().add(forward);
+        console.log("Computed Target:", target);
       } else {
         console.warn("[BlenderCamera Debug] No imported camera found!");
       }

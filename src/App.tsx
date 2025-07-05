@@ -6,9 +6,13 @@ import { Canvas } from "@react-three/fiber";
 import GeneralCameraController from "./camera/GeneralCameraController";
 import BlenderCamera from "./camera/BlenderCamera";
 import CameraManager from "./camera/CameraManager";
+import Test_Camera from "./camera/Test_Camera";
+import useExperience from "./hooks/useExperience";
+import CameraSwitcher from "./camera/CameraSwitcher";
 
 function App() {
   const isMobile = useIsMobile();
+  const { activeCamera } = useExperience();
   return (
     <>
       {isMobile ? (
@@ -21,11 +25,12 @@ function App() {
         <>
           <Canvas>
             <LoadModel url="test_scene" />
-            {/* <GeneralCameraController /> */}
-            <CameraManager />
-            <BlenderCamera
-              url="test_camera"
-            />
+            {activeCamera === "presetCamera" && <CameraManager />}
+            {activeCamera === "blenderCamera" && (
+              <BlenderCamera url="test_camera" />
+            )}
+            {activeCamera === "animatedCamera" && <Test_Camera />}
+            <CameraSwitcher />
           </Canvas>
         </>
       )}
