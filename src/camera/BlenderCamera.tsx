@@ -70,8 +70,8 @@ export default function BlenderCamera({
     }
   }, [activeCamera, cameras, cameraName, set, modelPath, scene, camera]);
 
-  useControls("Camera Debug", {
-    "Within Blender Cam Log": button(() => {
+  useControls("Blender Debug", {
+    "Log Blender Cam Values": button(() => {
       // Find the imported camera (same logic as in useEffect)
       let importedCamera: THREE.Camera | undefined = undefined;
       if (cameras && cameras.length > 0) {

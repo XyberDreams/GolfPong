@@ -5,16 +5,34 @@ import * as THREE from "three";
 // Generic types for 3D experience
 export type ExperienceStep = string;
 export type LightingPreset = string;
-export type CameraType = "blenderCamera" | "debugCamera" | "presetCamera"| "animatedCamera";
-export type CurrentState = "intro" | "loading" | "active" | "completed"| "main";
+export type CameraType =
+  | "blenderCamera"
+  | "debugCamera"
+  | "presetCamera"
+  | "animatedCamera";
+
+export type CurrentState =
+  | "intro"
+  | "loading"
+  | "active"
+  | "completed"
+  | "main";
+// Array of all possible CurrentState values for runtime use
+export const CurrentStateArray: CurrentState[] = [
+  "intro",
+  "loading",
+  "active",
+  "completed",
+  "main",
+];
 
 export interface ExperienceContextProps {
   activeCamera: CameraType;
   setActiveCamera: (type: CameraType) => void;
   lighting: LightingPreset;
   setLighting: (preset: LightingPreset) => void;
-  currentState: ExperienceStep;
-  setCurrentState: (step: ExperienceStep) => void;
+  currentState: CurrentState;
+  setCurrentState: (state: CurrentState) => void;
   loading: boolean;
   setLoading: (loading: boolean) => void;
   controlEnabled?: boolean;
@@ -32,9 +50,9 @@ export const ExperienceProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const [activeCamera, setActiveCamera] = useState<CameraType>('blenderCamera');
+  const [activeCamera, setActiveCamera] = useState<CameraType>("blenderCamera");
   const [lighting, setLighting] = useState<LightingPreset>("day");
-  const [currentState, setCurrentState] = useState<ExperienceStep>("intro");
+  const [currentState, setCurrentState] = useState<CurrentState>("intro");
   const [loading, setLoading] = useState<boolean>(false);
   const [controlEnabled, setControlEnabled] = useState<boolean>(false);
   const [cameraBusy, setCameraBusy] = useState<boolean>(false);

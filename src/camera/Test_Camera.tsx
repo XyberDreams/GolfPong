@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { useGLTF, CameraControls } from "@react-three/drei";
 import { useAnimationFlow } from "../hooks/useAnimationFlow";
+import { CurrentStateArray } from "../context/ExperienceContext";
 import type CameraControlsType from "camera-controls";
 import cameraPresets from "../config/cameraPresets.json";
 import {
@@ -21,16 +22,17 @@ export default function Test_Camera() {
     setControlEnabled,
     currentState,
     setCurrentState,
+    activeCamera,
   } = useExperience();
-  const cameraStates = ["intro", "main"];
 
   useControls(
-    "Camera States",
-    cameraStates.reduce((acc, state) => {
-      acc[`Go to: ${state}`] = button(() => setCurrentState(state));
-      //   console.log("Current state: ", currentState)
-      return acc;
-    }, {} as Record<string, any>)
+    "Camera Animation States",
+    activeCamera === "animatedCamera"
+      ? CurrentStateArray.reduce((acc, state) => {
+          acc[`Play: ${state}`] = button(() => setCurrentState(state));
+          return acc;
+        }, {} as Record<string, any>)
+      : {}
   );
 
   // 2. Camera actions using the generic transition helper

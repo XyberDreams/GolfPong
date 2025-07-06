@@ -25,20 +25,20 @@ export default function LoadModel({
   const { actions } = useAnimations(animations, group);
 
   // Leva button to play all animations once
-  useControls("Model Controls", {
-    Play_Animation: button(() => {
-      if (!actions || Object.keys(actions).length === 0) return;
-      Object.values(actions).forEach((action) => {
-        if (action) {
-          action.reset();
-          action.setLoop(THREE.LoopOnce, 1);
-          action.clampWhenFinished = true;
-          action.paused = false;
-          action.play();
-        }
-      });
-    }),
-  });
+  // useControls("Model Controls", {
+  //   Play_Animation: button(() => {
+  //     if (!actions || Object.keys(actions).length === 0) return;
+  //     Object.values(actions).forEach((action) => {
+  //       if (action) {
+  //         action.reset();
+  //         action.setLoop(THREE.LoopOnce, 1);
+  //         action.clampWhenFinished = true;
+  //         action.paused = false;
+  //         action.play();
+  //       }
+  //     });
+  //   }),
+  // });
 
   React.useEffect(() => {
     if (onLoaded && group.current) onLoaded(group.current);

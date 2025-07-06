@@ -38,9 +38,9 @@ export default function CameraManager() {
 
   // Preset camera buttons (for preset camera only)
   useControls(
-    "Preset Camera Presets",
+    "View Camera Presets",
     cameraPresets.reduce((acc, preset, idx) => {
-      acc[`Jump to: ${preset.name}`] = button(() => setActivePresetIndex(idx));
+      acc[`View: ${preset.name}`] = button(() => setActivePresetIndex(idx));
       return acc;
     }, {} as Record<string, any>)
   );
