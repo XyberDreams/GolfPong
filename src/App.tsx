@@ -43,7 +43,7 @@ function App() {
           <Canvas>
             <LoadModel url="diorama" />
             <Environment preset="city" />
-            {navigationPOV === "oneShot" && <OneShot/>}
+            {navigationPOV === "oneShotPOV" && <OneShot/>}
             {(navigationPOV === "firstPersonPOV" ||
               navigationPOV === "thirdPersonPOV") && (
               <Physics debug timeStep="vary">

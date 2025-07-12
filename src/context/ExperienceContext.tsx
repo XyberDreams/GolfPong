@@ -18,7 +18,7 @@ export type CurrentState =
   | "completed"
   | "main";
 
-export type NavigationPOV = "thirdPersonPOV" | "firstPersonPOV" | "oneShot";
+export type NavigationPOV = "thirdPersonPOV" | "firstPersonPOV" | "oneShotPOV";
 
 // Array of all possible CurrentState values for runtime use
 export const CurrentStateArray: CurrentState[] = [
@@ -100,9 +100,9 @@ export const ExperienceProvider = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [controlEnabled, setControlEnabled] = useState<boolean>(false);
   const [cameraBusy, setCameraBusy] = useState<boolean>(false);
-  const [ecctrlProps, setEcctrlProps] = useState(firstPersonPOV);
+  const [ecctrlProps, setEcctrlProps] = useState(thirdPersonPOV);
   const [ecctrlRigidBody, setEcctrlRigidBody] = useState(null);
-  const [navigationPOV, setNavigationPOV] = useState("oneShot" as NavigationPOV);
+  const [navigationPOV, setNavigationPOV] = useState("thirdPersonPOV" as NavigationPOV);
 
   return (
     <ExperienceContext.Provider
