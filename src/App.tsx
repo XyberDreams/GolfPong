@@ -9,6 +9,8 @@ import CameraManager from "./camera/CameraManager";
 import Test_Camera from "./camera/Test_Camera";
 import useExperience from "./hooks/useExperience";
 import CameraSwitcher from "./camera/CameraSwitcher";
+import { Portal, BackButton } from "./components/portal/Portal";
+
 
 function App() {
   const isMobile = useIsMobile();
@@ -23,7 +25,7 @@ function App() {
         </>
       ) : (
         <>
-          <Canvas>
+          {/* <Canvas>
             <LoadModel url="test_scene" />
             {activeCamera === "presetCamera" && <CameraManager />}
             {activeCamera === "blenderCamera" && (
@@ -31,7 +33,9 @@ function App() {
             )}
             {activeCamera === "animatedCamera" && <Test_Camera />}
             <CameraSwitcher />
-          </Canvas>
+          </Canvas> */}
+          <BackButton/>
+          <Portal/>
         </>
       )}
     </>
