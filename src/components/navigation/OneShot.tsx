@@ -3,9 +3,9 @@ import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 
 export default function OneShot({
-  position = [0, 10, 20],
+  position = [0, 10, 70],
   lookAt = [0, 0, 0],
-  maxOffset = 2, 
+  maxOffset = 2,
   sensitivity = 0.02,
 }) {
   const { camera } = useThree();
@@ -17,8 +17,8 @@ export default function OneShot({
   useEffect(() => {
     function onMouseMove(e) {
       // Normalize mouse to [-1, 1]
-      mouse.current.x = ((e.clientX / window.innerWidth) - 0.5) * 2;
-      mouse.current.y = ((e.clientY / window.innerHeight) - 0.5) * 2;
+      mouse.current.x = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouse.current.y = (e.clientY / window.innerHeight - 0.5) * 2;
     }
     window.addEventListener("mousemove", onMouseMove);
     return () => window.removeEventListener("mousemove", onMouseMove);
@@ -27,9 +27,8 @@ export default function OneShot({
   // Camera update
   useFrame(() => {
     // Calculate offset
-    const offsetX = THREE.MathUtils.clamp(mouse.current.x * maxOffset, -maxOffset, maxOffset) * sensitivity;
-    const offsetY = THREE.MathUtils.clamp(mouse.current.y * maxOffset, -maxOffset, maxOffset) * sensitivity;
-
+    const offsetX = -THREE.MathUtils.clamp(mouse.current.x, -1, 1) * maxOffset;
+    const offsetY = -THREE.MathUtils.clamp(mouse.current.y, -1, 1) * maxOffset;
     // Set camera position with offset
     camera.position.lerp(
       new THREE.Vector3(

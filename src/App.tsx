@@ -41,7 +41,7 @@ function App() {
           {/* <BackButton/>
           <Portal/> */}
           <Canvas>
-            <LoadModel url="test_scene" />
+            <LoadModel url="diorama" />
             <Environment preset="city" />
             {navigationPOV === "oneShot" && <OneShot/>}
             {(navigationPOV === "firstPersonPOV" ||
