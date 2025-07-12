@@ -9,6 +9,11 @@ import useExperience from "../../hooks/useExperience";
 
 // Default keyboard map and animation set
 
+interface CharacterControllerProps {
+  characterURL: string;
+  onReady?: (ref: any) => void;
+  children?: React.ReactNode;
+}
 
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
@@ -33,7 +38,7 @@ const animationSet = {
   action2: "gun",
 };
 
-export function CharacterController({ characterURL, onReady, children }) {
+export function CharacterController({ characterURL, onReady, children }: CharacterControllerProps) {
   const ecctrlRef = useRef();
   const { ecctrlProps, setEcctrlRigidBody, navigationPOV} = useExperience();
 
@@ -68,7 +73,7 @@ export function CharacterController({ characterURL, onReady, children }) {
   );
 }
 
-function SuspenseLoader(props) {
+function SuspenseLoader(props: {loadedFn?: () => void}) {
   useEffect(() => {
     if (props.loadedFn) props.loadedFn();
   }, []);
