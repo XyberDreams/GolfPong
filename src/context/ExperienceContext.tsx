@@ -17,6 +17,9 @@ export type CurrentState =
   | "active"
   | "completed"
   | "main";
+
+export type NavigationPOV = "thirdPersonPOV" | "firstPersonPOV" | "oneShot";
+
 // Array of all possible CurrentState values for runtime use
 export const CurrentStateArray: CurrentState[] = [
   "intro",
@@ -38,27 +41,27 @@ export const ecctrlDistance = () => {
   if (window.innerWidth <= 1024) return "-5";
   return "-5";
 };
-export const standardState = {
+export const thirdPersonPOV = {
   jumpVel: 5,
   maxVelLimit: 2.5,
   turnVelMultiplier: 0.2,
   sprintMult: 2,
   turnSpeed: 15,
-  // characterInitDir: -1.5,
-  // camInitRot: { x: 0, y: -1.5},
-  // camMaxDis: -5,
-  // accDeltaTime: 8,
   autoBalance: false,
-  // camZoomSpeed: 100,
-  // camFollowMult: 11,
-  // camMoveSpeed: 2,
   camCollision: true,
   camCollisionOffset: 0.7,
   camInitDis: ecctrlDistance(),
-  // position: [0, 10, 0],
-  // floatHeight: 0.07,
-  // fixedCamRotMult: 1,
-  // disableFollowCam: true,
+};
+
+const firstPersonPOV = {
+  camCollision: false,
+  camInitDis: -0.01,
+  camMinDis: -0.01,
+  camFollowMult: 1000,
+  camLerpMult: 1000,
+  turnVelMultiplier: 1,
+  turnSpeed: 100,
+  mode: "CameraBasedMovement",
 };
 
 export interface ExperienceContextProps {
@@ -76,8 +79,10 @@ export interface ExperienceContextProps {
   setCameraBusy?: (busy: boolean) => void;
   ecctrlProps: any;
   setEcctrlProps: React.Dispatch<React.SetStateAction<any>>;
-  ecctrlRigidBody: unknown; // Use a more specific type if you know it (e.g., RapierRigidBody)
+  ecctrlRigidBody: unknown;
   setEcctrlRigidBody: React.Dispatch<React.SetStateAction<unknown>>;
+  navigationPOV: NavigationPOV;
+  setNavigationPOV: React.Dispatch<React.SetStateAction<NavigationPOV>>;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -95,8 +100,9 @@ export const ExperienceProvider = ({
   const [loading, setLoading] = useState<boolean>(false);
   const [controlEnabled, setControlEnabled] = useState<boolean>(false);
   const [cameraBusy, setCameraBusy] = useState<boolean>(false);
-  const [ecctrlProps, setEcctrlProps] = useState(standardState);
+  const [ecctrlProps, setEcctrlProps] = useState(firstPersonPOV);
   const [ecctrlRigidBody, setEcctrlRigidBody] = useState(null);
+  const [navigationPOV, setNavigationPOV] = useState("oneShot" as NavigationPOV);
 
   return (
     <ExperienceContext.Provider
@@ -117,6 +123,8 @@ export const ExperienceProvider = ({
         setEcctrlProps,
         ecctrlRigidBody,
         setEcctrlRigidBody,
+        navigationPOV,
+        setNavigationPOV,
       }}
     >
       {children}

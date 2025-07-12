@@ -14,10 +14,11 @@ import { CharacterController } from "./components/navigation/CharacterController
 import { Physics } from "@react-three/rapier";
 import Floor from "./components/objects/Floor";
 import { Environment } from "@react-three/drei";
+import OneShot from "./components/navigation/OneShot";
 
 function App() {
   const isMobile = useIsMobile();
-  const { activeCamera } = useExperience();
+  const { activeCamera, navigationPOV } = useExperience();
   return (
     <>
       {isMobile ? (
@@ -41,12 +42,15 @@ function App() {
           <Portal/> */}
           <Canvas>
             <LoadModel url="test_scene" />
-            <Environment preset="city"/>
-
-            <Physics  debug timeStep="vary">
-              <CharacterController characterURL="/models/hoshi.glb" />
-              <Floor position={[0, -10.224, 0]} />
-            </Physics>
+            <Environment preset="city" />
+            {navigationPOV === "oneShot" && <OneShot/>}
+            {(navigationPOV === "firstPersonPOV" ||
+              navigationPOV === "thirdPersonPOV") && (
+              <Physics debug timeStep="vary">
+                <CharacterController characterURL="/models/hoshi.glb" />
+                <Floor position={[0, 0, 0]} />
+              </Physics>
+            )}
           </Canvas>
         </>
       )}

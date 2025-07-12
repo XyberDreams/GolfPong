@@ -35,7 +35,7 @@ const animationSet = {
 
 export function CharacterController({ characterURL, onReady, children }) {
   const ecctrlRef = useRef();
-  const { ecctrlProps, setEcctrlRigidBody} = useExperience();
+  const { ecctrlProps, setEcctrlRigidBody, navigationPOV} = useExperience();
 
   function initializeEcctrl() {
   console.log("Initializing Ecctrl", ecctrlRef.current);
@@ -57,7 +57,8 @@ export function CharacterController({ characterURL, onReady, children }) {
               characterURL={characterURL}
               animationSet={animationSet}
             >
-              <Character />
+                {navigationPOV === "thirdPersonPOV" && <Character />}
+              
             </EcctrlAnimation>
           </Ecctrl>
         </KeyboardControls>
