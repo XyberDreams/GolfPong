@@ -13,14 +13,14 @@ export default function CameraSwitcher() {
   useControls("Camera Switcher", {
     "Blender Camera": button(() => {
       setActiveCamera("blenderCamera");
-      mixpanel.track("Button Clicked", { button: "Blender Camera" }); // <-- Track event
+      // mixpanel.track("Button Clicked", { button: "Blender Camera" });
     }),
     "Camera Manager": button(() => {
       setActiveCamera("presetCamera");
-      mixpanel.track("Signup Button Clicked", {
-        source: "home page",
-        variety: "default",
-      });
+      // mixpanel.track("Signup Button Clicked", {
+      //   source: "home page",
+      //   variety: "default",
+      // });
     }),
     "Test Camera": button(() => setActiveCamera("animatedCamera")),
   });

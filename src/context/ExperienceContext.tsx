@@ -26,6 +26,42 @@ export const CurrentStateArray: CurrentState[] = [
   "main",
 ];
 
+  // Locked Control State
+  export const lockedState = {
+    jumpVel: 0,
+    maxVelLimit: 0,
+    turnSpeed: 0,
+  };
+
+  // Standard State
+  export const ecctrlDistance = () => {
+    if (window.innerWidth <= 1024) return "-5";
+    return "-5";
+  };
+  export const standardState = {
+    jumpVel: 5,
+    maxVelLimit: 13,
+    turnVelMultiplier: 0.2,
+    sprintMult: 1.75,
+    turnSpeed: 15,
+    // characterInitDir: -1.5,
+    // camInitRot: { x: 0, y: -1.5},
+    camMaxDis: -5,
+    accDeltaTime: 8,
+    autoBalance: false,
+    camZoomSpeed: 100,
+    camFollowMult: 11,
+    camMoveSpeed: 2,
+    camCollision: true,
+    camCollisionOffset: 0.7,
+    camInitDis: ecctrlDistance(),
+    position: [-209.32593267123033, 105.71270760563941, -28.386689708965758],
+    floatHeight: 0.07,
+    fixedCamRotMult: 1,
+    disableFollowCam: true,
+  };
+
+
 export interface ExperienceContextProps {
   activeCamera: CameraType;
   setActiveCamera: (type: CameraType) => void;
@@ -39,6 +75,8 @@ export interface ExperienceContextProps {
   setControlEnabled?: (enabled: boolean) => void;
   cameraBusy?: boolean;
   setCameraBusy?: (busy: boolean) => void;
+  ecctrlProps: any; // <-- Add this line (use a better type if you have one)
+  setEcctrlProps: React.Dispatch<React.SetStateAction<any>>;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -50,12 +88,14 @@ export const ExperienceProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+
   const [activeCamera, setActiveCamera] = useState<CameraType>("blenderCamera");
   const [lighting, setLighting] = useState<LightingPreset>("day");
   const [currentState, setCurrentState] = useState<CurrentState>("intro");
   const [loading, setLoading] = useState<boolean>(false);
   const [controlEnabled, setControlEnabled] = useState<boolean>(false);
   const [cameraBusy, setCameraBusy] = useState<boolean>(false);
+  const [ecctrlProps, setEcctrlProps] = useState(standardState);
 
   return (
     <ExperienceContext.Provider
@@ -72,6 +112,8 @@ export const ExperienceProvider = ({
         setControlEnabled,
         cameraBusy,
         setCameraBusy,
+        ecctrlProps,
+        setEcctrlProps,
       }}
     >
       {children}
