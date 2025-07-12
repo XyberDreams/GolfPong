@@ -10,9 +10,10 @@ import {
   Preload,
 } from "@react-three/drei";
 import { useRoute, useLocation } from "wouter";
-import { easing, geometry } from "maath";
+import { easing} from "maath";
+import { RoundedPlaneGeometry } from "maath/geometry";
 
-extend(geometry);
+extend({ RoundedPlaneGeometry });
 
 export const Portal = () => (
   <>
@@ -107,6 +108,7 @@ function Frame({
         onPointerOut={() => hover(false)}
       >
         <roundedPlaneGeometry args={[width, height, 0.1]} />
+        
         <MeshPortalMaterial
           ref={portal}
           events={params?.id === id}

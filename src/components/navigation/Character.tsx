@@ -4,11 +4,11 @@ Command: npx gltfjsx@6.5.3 ./public/crocs/models/crocs_hoshi_reduced.glb
 */
 
 import React from 'react'
-import { useGraph } from '@react-three/fiber'
+import { useGraph} from '@react-three/fiber'
 import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 
-export function Character(props) {
+export function Character(props: any) {
   const group = React.useRef()
   const { scene, animations } = useGLTF('/models/character.glb')
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
