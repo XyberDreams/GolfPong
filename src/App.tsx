@@ -43,9 +43,9 @@ function App() {
             <LoadModel url="test_scene" />
             <Environment preset="city"/>
 
-            <Physics timeStep="vary">
+            <Physics  debug timeStep="vary">
               <CharacterController characterURL="/models/hoshi.glb" />
-              <Floor position={[-305.063, 99.224, -135.983]} />
+              <Floor position={[0, -10.224, 0]} />
             </Physics>
           </Canvas>
         </>

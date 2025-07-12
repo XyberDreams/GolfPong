@@ -1,11 +1,15 @@
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 
-export default function Floor({ position }) {
+interface FloorProps {
+  position: [number, number, number];
+}
+
+export default function Floor({ position }: FloorProps) {
   return (
     <RigidBody type="fixed" colliders="hull">
-      <CuboidCollider position={position} args={[700, 5, 700]} />
-      <mesh position={[0, -3.5, 0]}>
-        <boxGeometry args={[700, 5, 700]} />
+      <CuboidCollider position={position} args={[700, 2, 700]} />
+      <mesh position={position}>
+        <boxGeometry args={[700, 2, 700]} />
         <meshStandardMaterial color="red" />
       </mesh>
     </RigidBody>

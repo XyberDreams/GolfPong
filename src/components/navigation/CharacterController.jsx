@@ -2,12 +2,14 @@ import { useRef, useEffect, Suspense } from "react";
 import { KeyboardControls, Bvh } from "@react-three/drei";
 import Ecctrl, { EcctrlAnimation } from "ecctrl";
 import { Character } from "./Character";
-import {Physics } from "@react-three/rapier";
+import { Physics } from "@react-three/rapier";
 import useExperience from "../../hooks/useExperience";
 
 // import CharacterSFX from "../mvp/gameObjects/CharacterSFX";
 
 // Default keyboard map and animation set
+
+
 const keyboardMap = [
   { name: "forward", keys: ["ArrowUp", "KeyW"] },
   { name: "backward", keys: ["ArrowDown", "KeyS"] },
@@ -31,37 +33,43 @@ const animationSet = {
   action2: "gun",
 };
 
-export function CharacterController({
-  characterURL,
-  onReady,
-  children,
-}) {
+export function CharacterController({ characterURL, onReady, children }) {
   const ecctrlRef = useRef();
-  const { ecctrlProps } = useExperience();
+  const { ecctrlProps, setEcctrlRigidBody} = useExperience();
+
+  function initializeEcctrl() {
+  console.log("Initializing Ecctrl", ecctrlRef.current);
+  setEcctrlRigidBody(ecctrlRef.current);
+}
 
   useEffect(() => {
     if (onReady && ecctrlRef.current) onReady(ecctrlRef.current);
   }, [onReady]);
 
-
-if (!ecctrlProps) return null;
+  if (!ecctrlProps) return null;
 
   return (
-      <Suspense>
-        <Bvh>
-          <KeyboardControls map={keyboardMap}>
-            
-            <Ecctrl animated {...(ecctrlProps || {})}>
-              <EcctrlAnimation
-                characterURL={characterURL}
-                animationSet={animationSet}
-              >
-                <Character />
-              </EcctrlAnimation>
-            </Ecctrl>
-          </KeyboardControls>
-        </Bvh>
-      </Suspense>
-
+    <Suspense>
+      <Bvh>
+        <KeyboardControls map={keyboardMap}>
+          <Ecctrl ref={ecctrlRef} animated {...ecctrlProps}>
+            <EcctrlAnimation
+              characterURL={characterURL}
+              animationSet={animationSet}
+            >
+              <Character />
+            </EcctrlAnimation>
+          </Ecctrl>
+        </KeyboardControls>
+      </Bvh>
+      <SuspenseLoader loadedFn={() => initializeEcctrl()} />
+    </Suspense>
   );
+}
+
+function SuspenseLoader(props) {
+  useEffect(() => {
+    if (props.loadedFn) props.loadedFn();
+  }, []);
+  return null;
 }
