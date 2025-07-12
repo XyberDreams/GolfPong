@@ -10,17 +10,28 @@ import {
   Preload,
 } from "@react-three/drei";
 import { useRoute, useLocation } from "wouter";
-import { easing} from "maath";
+import { easing } from "maath";
 import { RoundedPlaneGeometry } from "maath/geometry";
 
 extend({ RoundedPlaneGeometry });
+
+interface FrameProps {
+  id: string;
+  name: string;
+  author: string;
+  bg?: string;
+  width?: number;
+  height?: number;
+  children: React.ReactNode;
+  [key: string]: any;
+}
 
 export const Portal = () => (
   <>
     <Canvas
       flat
       camera={{ fov: 75, position: [0, 0, 20] }}
-      eventSource={document.getElementById("root")}
+      eventSource={document.getElementById("root") ?? undefined}
       eventPrefix="client"
     >
       <color attach="background" args={["#f0f0f0"]} />
@@ -62,8 +73,8 @@ function Frame({
   height = 1.61803398875,
   children,
   ...props
-}) {
-  const portal = useRef();
+}: FrameProps) {
+  const portal = useRef<any>(null);
   const [, setLocation] = useLocation();
   const [, params] = useRoute("/item/:id");
   const [hovered, hover] = useState(false);
@@ -108,13 +119,14 @@ function Frame({
         onPointerOut={() => hover(false)}
       >
         <roundedPlaneGeometry args={[width, height, 0.1]} />
-        
+
         <MeshPortalMaterial
           ref={portal}
           events={params?.id === id}
           side={THREE.DoubleSide}
+          {...({} as any)}
         >
-          <color attach="background" args={[bg]} />
+          <color attach="background" args={[bg ?? "#fff"]} />
           {children}
         </MeshPortalMaterial>
       </mesh>
@@ -126,18 +138,24 @@ function Rig({
   position = new THREE.Vector3(0, 0, 2),
   focus = new THREE.Vector3(0, 0, 0),
 }) {
-  const { controls, scene } = useThree();
+  const controlsRef = useRef<any>(null);
+  const { scene } = useThree();
   const [, params] = useRoute("/item/:id");
   useEffect(() => {
-    const active = scene.getObjectByName(params?.id);
-    if (active) {
+    const active = params?.id ? scene.getObjectByName(params.id) : undefined;
+    if (active && active.parent) {
       active.parent.localToWorld(position.set(0, 0.5, 0.25));
       active.parent.localToWorld(focus.set(0, 0, -2));
     }
-    controls?.setLookAt(...position.toArray(), ...focus.toArray(), true);
+    controlsRef.current?.setLookAt?.(...position.toArray(), ...focus.toArray(), true);
   });
   return (
-    <CameraControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 2} />
+    <CameraControls
+      ref={controlsRef}
+      makeDefault
+      minPolarAngle={0}
+      maxPolarAngle={Math.PI / 2}
+    />
   );
 }
 export function BackButton() {

@@ -4,7 +4,7 @@ import { useGLTF, useAnimations } from '@react-three/drei'
 import { SkeletonUtils } from 'three-stdlib'
 import * as THREE from 'three'
 
-export function Character(props: JSX.IntrinsicElements['group']) {
+export function Character(props: any) {
   const group = React.useRef<THREE.Group>(null)
   const { scene, animations } = useGLTF('/models/character.glb')
   const clone = React.useMemo(() => SkeletonUtils.clone(scene), [scene])
