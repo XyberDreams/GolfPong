@@ -15,6 +15,14 @@ import { RoundedPlaneGeometry } from "maath/geometry";
 
 extend({ RoundedPlaneGeometry });
 
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      roundedPlaneGeometry: any;
+    }
+  }
+}
+
 interface FrameProps {
   id: string;
   name: string;

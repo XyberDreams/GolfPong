@@ -79,8 +79,8 @@ export interface ExperienceContextProps {
   setCameraBusy?: (busy: boolean) => void;
   ecctrlProps: any;
   setEcctrlProps: React.Dispatch<React.SetStateAction<any>>;
-  ecctrlRigidBody: unknown;
-  setEcctrlRigidBody: React.Dispatch<React.SetStateAction<unknown>>;
+  ecctrlRigidBody: unknown | null;
+  setEcctrlRigidBody: React.Dispatch<React.SetStateAction<unknown | null>>;
   navigationPOV: NavigationPOV;
   setNavigationPOV: React.Dispatch<React.SetStateAction<NavigationPOV>>;
 }
@@ -101,7 +101,7 @@ export const ExperienceProvider = ({
   const [controlEnabled, setControlEnabled] = useState<boolean>(false);
   const [cameraBusy, setCameraBusy] = useState<boolean>(false);
   const [ecctrlProps, setEcctrlProps] = useState(thirdPersonPOV);
-  const [ecctrlRigidBody, setEcctrlRigidBody] = useState(null);
+  const [ecctrlRigidBody, setEcctrlRigidBody] = useState<unknown | null>(null);
   const [navigationPOV, setNavigationPOV] = useState("thirdPersonPOV" as NavigationPOV);
 
   return (
