@@ -83,6 +83,16 @@ export interface ExperienceContextProps {
   setEcctrlRigidBody: React.Dispatch<React.SetStateAction<unknown | null>>;
   navigationPOV: NavigationPOV;
   setNavigationPOV: React.Dispatch<React.SetStateAction<NavigationPOV>>;
+
+  //SOUND
+  bgMusicPlaying: boolean;
+  setBGMusicPlaying: (playing: boolean) => void;
+  playBGMusic: () => void;
+  pauseBGMusic: () => void;
+  isMuted: boolean;
+  setIsMuted: (muted: boolean) => void;
+  toggleMute: () => void;
+  playSFX: (name: string) => void;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -102,7 +112,21 @@ export const ExperienceProvider = ({
   const [cameraBusy, setCameraBusy] = useState<boolean>(false);
   const [ecctrlProps, setEcctrlProps] = useState(thirdPersonPOV);
   const [ecctrlRigidBody, setEcctrlRigidBody] = useState<unknown | null>(null);
-  const [navigationPOV, setNavigationPOV] = useState("thirdPersonPOV" as NavigationPOV);
+  const [navigationPOV, setNavigationPOV] = useState(
+    "thirdPersonPOV" as NavigationPOV
+  );
+
+  //SOUND
+  const [bgMusicPlaying, setBGMusicPlaying] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
+  const playBGMusic = () => setBGMusicPlaying(true);
+  const pauseBGMusic = () => setBGMusicPlaying(false);
+  const toggleMute = () => setIsMuted((m) => !m);
+  const playSFX = (name: string) => {
+    const audio = new Audio(`/sounds/sfx/${name}.wav`);
+    audio.volume = 0.5;
+    audio.play().catch(() => {});
+  };
 
   return (
     <ExperienceContext.Provider
@@ -125,6 +149,14 @@ export const ExperienceProvider = ({
         setEcctrlRigidBody,
         navigationPOV,
         setNavigationPOV,
+        bgMusicPlaying,
+        setBGMusicPlaying,
+        playBGMusic,
+        pauseBGMusic,
+        isMuted,
+        setIsMuted,
+        toggleMute,
+        playSFX,
       }}
     >
       {children}

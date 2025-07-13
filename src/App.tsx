@@ -10,11 +10,14 @@ import Test_Camera from "./camera/Test_Camera";
 import useExperience from "./hooks/useExperience";
 import CameraSwitcher from "./camera/CameraSwitcher";
 import { Portal, BackButton } from "./components/portal/Portal";
-import { CharacterController } from "./components/navigation/CharacterController";
+import { CharacterController } from "./components/character controller/CharacterController";
 import { Physics } from "@react-three/rapier";
 import Floor from "./components/objects/Floor";
 import { Environment } from "@react-three/drei";
 import OneShot from "./components/navigation/OneShot";
+import Hotspot from "./components/Hotspot";
+import BGSoundToggleIcon from "./sound/BGSoundToggleIcon";
+import SFXButtons from "./sound/SFXButton";
 
 function App() {
   const isMobile = useIsMobile();
@@ -38,11 +41,17 @@ function App() {
             {activeCamera === "animatedCamera" && <Test_Camera />}
             <CameraSwitcher />
           </Canvas> */}
+
           {/* <BackButton/>
           <Portal/> */}
-          <Canvas>
+       
+          <BGSoundToggleIcon />
+          <SFXButtons/>
+          {/* <Canvas>
             <LoadModel url="diorama" />
+            
             <Environment preset="city" />
+            <Hotspot position={[0, 3, 0]} duration="1.5s" pulseColor="white" pulseSpread="2px"/>
             {navigationPOV === "oneShotPOV" && <OneShot/>}
             {(navigationPOV === "firstPersonPOV" ||
               navigationPOV === "thirdPersonPOV") && (
@@ -51,7 +60,8 @@ function App() {
                 <Floor position={[0, 0, 0]} />
               </Physics>
             )}
-          </Canvas>
+
+          </Canvas> */}
         </>
       )}
     </>

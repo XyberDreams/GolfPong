@@ -12,6 +12,7 @@ import {
 import { useRoute, useLocation } from "wouter";
 import { easing } from "maath";
 import { RoundedPlaneGeometry } from "maath/geometry";
+import { PulsatingButton } from "../PulsatingButton";
 
 extend({ RoundedPlaneGeometry });
 
@@ -155,7 +156,11 @@ function Rig({
       active.parent.localToWorld(position.set(0, 0.5, 0.25));
       active.parent.localToWorld(focus.set(0, 0, -2));
     }
-    controlsRef.current?.setLookAt?.(...position.toArray(), ...focus.toArray(), true);
+    controlsRef.current?.setLookAt?.(
+      ...position.toArray(),
+      ...focus.toArray(),
+      true
+    );
   });
   return (
     <CameraControls
@@ -171,8 +176,10 @@ export function BackButton() {
   const [, setLocation] = useLocation();
   const isVisible = !!params;
   return (
-    <button
-      className="fixed top-8 left-8 z-50 px-4 py-2 bg-white border border-gray-300 rounded shadow hover:bg-gray-100 text-gray-800 text-base font-semibold transition-opacity duration-700"
+    <PulsatingButton
+      className="fixed top-8 left-8 z-50 px-4 py-2 text-black text-4xl bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 font-semibold transition-opacity duration-700"
+      pulseColor="#00FF00"
+      duration="1.5s"
       style={{
         opacity: isVisible ? 1 : 0,
         pointerEvents: isVisible ? "auto" : "none",
@@ -180,6 +187,6 @@ export function BackButton() {
       onClick={() => setLocation("/")}
     >
       &lt; Back
-    </button>
+    </PulsatingButton>
   );
 }

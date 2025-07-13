@@ -18,3 +18,19 @@ body,
   padding: 0;
   overflow: hidden;
 }
+
+@theme inline {
+  --animate-pulse: pulse var(--duration) ease-out infinite;
+
+  @keyframes pulse {
+    0%,
+    100% {
+      box-shadow: 0 0 0 0 var(--pulse-color, #ffffff);
+      opacity: 0.8; /* Start semi-transparent */
+    }
+    50% {
+      box-shadow: 0 0 0 var(--pulse-spread, 8px) var(--pulse-color, #ffffff);
+      opacity: 0.5; /* Fade out as it expands */
+    }
+  }
+}
