@@ -18,7 +18,7 @@ export default function BlenderCamera({
   url: string;
   cameraName?: string;
 }) {
-  const modelPath = `/models/${url}.glb`;
+  const modelPath = `${url}.glb`;
   const { cameras } = useGLTF(modelPath);
   const { set, camera, scene } = useThree();
   const { activeCamera, setActiveCamera } = useExperience();

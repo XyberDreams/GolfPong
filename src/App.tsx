@@ -18,6 +18,8 @@ import OneShot from "./components/navigation/OneShot";
 import Hotspot from "./components/Hotspot";
 import BGSoundToggleIcon from "./sound/BGSoundToggleIcon";
 import SFXButtons from "./sound/SFXButton";
+import KTX2Support from "./components/KTX2Support";
+import PCExperience from "./components/PCExperience";
 
 function App() {
   const isMobile = useIsMobile();
@@ -32,21 +34,24 @@ function App() {
         </>
       ) : (
         <>
-          {/* <Canvas>
-            <LoadModel url="test_scene" />
+          <Canvas>
+            <KTX2Support />
+            <PCExperience />
             {activeCamera === "presetCamera" && <CameraManager />}
             {activeCamera === "blenderCamera" && (
-              <BlenderCamera url="test_camera" />
+              <BlenderCamera url="/golfpong/gp_camera" />
             )}
             {activeCamera === "animatedCamera" && <Test_Camera />}
             <CameraSwitcher />
-          </Canvas> */}
+            <Environment preset="city" />
+          </Canvas>
 
           {/* <BackButton/>
           <Portal/> */}
-       
+
           <BGSoundToggleIcon />
-          <SFXButtons/>
+          <SFXButtons />
+
           {/* <Canvas>
             <LoadModel url="diorama" />
             
