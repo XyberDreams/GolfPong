@@ -29,7 +29,7 @@ export default function BGSoundToggleIcon() {
 
   return (
     <>
-      <Soundtrack src="/bg_music.mp3" />
+      <Soundtrack src="/sounds/bg_music.mp3" />
       <button
         onClick={handleClick}
         style={{
