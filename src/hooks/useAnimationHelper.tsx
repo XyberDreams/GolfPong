@@ -17,12 +17,14 @@ export default function useAnimationHelper(
   const groupRef = useRef<THREE.Group>(null!);
   const justStartedRef = useRef<Record<string, boolean>>({});
 
-  const initMaxDuration = () => {
-    names.forEach((name) => {
+  // Accepts an optional array of target clip names, otherwise uses all names
+  const initMaxDuration = (targetNames?: string[]) => {
+    const useNames = targetNames || names;
+    useNames.forEach((name) => {
       const duration = actions[name]?.getClip()?.duration ?? 0;
     });
     const duration = Math.max(
-      ...names.map((name) => actions[name]?.getClip()?.duration ?? 0)
+      ...useNames.map((name) => actions[name]?.getClip()?.duration ?? 0)
     );
     setMaxDuration(duration);
     return duration;
@@ -30,20 +32,25 @@ export default function useAnimationHelper(
 
   const playAllClipsAndPause = (
     pausePercents: number | number[] = 50,
-    timescale: number = 1
+    timescale: number = 1,
+    clipNames?: string | string[]
   ) => {
-    // console.log('[playAllClipsAndPause] called with pausePercents:', pausePercents, 'timescale:', timescale);
-    const duration = initMaxDuration();
+    // Use only the target clips for duration calculation
+    const targetNames = clipNames
+      ? Array.isArray(clipNames)
+        ? clipNames
+        : [clipNames]
+      : names;
+    const duration = initMaxDuration(targetNames);
     const points = (
       Array.isArray(pausePercents) ? pausePercents : [pausePercents]
     ).map((p) => (p / 100) * duration);
     setPausePoints(points);
     setCurrentPauseIndex(0);
 
-    names.forEach((name) => {
+    targetNames.forEach((name) => {
       const action = actions[name];
       if (action) {
-        // console.log(`[playAllClipsAndPause] Setting up "${name}" duration: ${action.getClip()?.duration}, timescale: ${timescale}`);
         action.reset();
         action.setLoop(THREE.LoopOnce, 1);
         action.clampWhenFinished = true;
@@ -55,19 +62,26 @@ export default function useAnimationHelper(
     });
   };
 
-  const continueToNextPause = (nextPercent?: number, timescale: number = 1) => {
-    // console.log('[continueToNextPause] called with nextPercent:', nextPercent, 'timescale:', timescale);
+  const continueToNextPause = (
+    nextPercent?: number,
+    timescale: number = 1,
+    clipNames?: string | string[]
+  ) => {
     let nextPausePoints: number[] = pausePoints;
     if (nextPercent !== undefined && maxDuration > 0) {
       nextPausePoints = [(nextPercent / 100) * maxDuration];
       setPausePoints(nextPausePoints);
       setCurrentPauseIndex(0);
     }
+    const targetNames = clipNames
+      ? Array.isArray(clipNames)
+        ? clipNames
+        : [clipNames]
+      : names;
 
-    names.forEach((name) => {
+    targetNames.forEach((name) => {
       const action = actions[name];
       if (action) {
-        // console.log(`[continueToNextPause] Continuing "${name}" at time: ${action.time}, timescale: ${timescale}`);
         action.setEffectiveTimeScale(timescale);
         action.paused = false;
         action.play();
@@ -116,16 +130,22 @@ export default function useAnimationHelper(
     setCurrentPauseIndex(0);
   };
 
-  const playPartialClip = (start: number, end: number, timescale = 1) => {
-    // console.log('[playPartialClip] called with start:', start, 'end:', end, 'timescale:', timescale);
-    const duration = initMaxDuration();
-    const startTime = (start / 100) * duration;
-    const endTime = (end / 100) * duration;
+  const playPartialClip = (
+    start: number,
+    end: number,
+    timescale = 1,
+    namesOverride?: string[]
+  ) => {
+    const targetNames = namesOverride || names;
 
-    names.forEach((name) => {
+    targetNames.forEach((name) => {
       const action = actions[name];
       if (action) {
-        // console.log(`[playPartialClip] "${name}" startTime: ${startTime}, endTime: ${endTime}, timescale: ${timescale}`);
+        const duration = action.getClip().duration;
+        const startTime = (start / 100) * duration;
+        const endTime = (end / 100) * duration;
+
+        action.stop();
         action.reset();
         action.setLoop(THREE.LoopOnce, 1);
         action.clampWhenFinished = true;
@@ -133,11 +153,10 @@ export default function useAnimationHelper(
         action.time = startTime;
         action.paused = false;
         action.play();
+
+        // Optionally, set a timeout to pause/stop at endTime
       }
     });
-
-    const playDuration = Math.abs((startTime - endTime) / timescale);
-    return playDuration * 1000; // in ms
   };
 
   // Pause logic
@@ -159,10 +178,6 @@ export default function useAnimationHelper(
       const shouldPause =
         timeScale >= 0 ? time >= threshold : time <= threshold;
       if (shouldPause) {
-        // console.log(
-
-        //   `[Pause] "${name}" paused at time: ${time}, threshold: ${threshold}, timescale: ${timeScale}`
-        // );
         action.paused = true;
       }
     });

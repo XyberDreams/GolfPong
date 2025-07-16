@@ -1,17 +1,18 @@
+import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
-import { useEffect,useMemo } from "react";
-import { KTX2Loader } from "three/examples/jsm/Addons.js";
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader";
 
-export default function KTX2Support() {
-  const { gl } = useThree();
+export default function KTX2Support({onReady}) {
+  const gl = useThree((state) => state.gl);
 
-   useMemo(() => {
-    const ktx2Loader = new KTX2Loader()
-      .setTranscoderPath("/basis/")
-      .detectSupport(gl);
-
-    GLTFLoader.prototype.setKTX2Loader?.call(GLTFLoader, ktx2Loader);
+  useEffect(() => {
+    const ktx2loader = new KTX2Loader();
+    ktx2loader.setTranscoderPath("https://cdn.jsdelivr.net/gh/pmndrs/drei-assets/basis/");
+    ktx2loader.detectSupport(gl);
+    window.ktx2loader = ktx2loader; // global for loader callbacks
+    if (onReady) {
+      onReady();
+    }
   }, [gl]);
 
   return null;

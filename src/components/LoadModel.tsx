@@ -29,12 +29,9 @@ export default function LoadModel({
     undefined,
     undefined,
     (loader) => {
-      const ktx2loader = new KTX2Loader();
-      ktx2loader.setTranscoderPath(
-        "https://cdn.jsdelivr.net/gh/pmndrs/drei-assets/basis/"
-      );
-      ktx2loader.detectSupport(gl); // <-- use the correct gl
-      loader.setKTX2Loader(ktx2loader);
+      if (window.ktx2loader) {
+        loader.setKTX2Loader(window.ktx2loader);
+      }
     }
   );
   const { actions } = useAnimations(animations, group);

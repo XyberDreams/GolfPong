@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import useIsMobile from "./hooks/useIsMobile";
 import LoadModel from "./components/LoadModel";
@@ -25,6 +25,8 @@ import PowerMeter from "./ui/PowerMeter";
 function App() {
   const isMobile = useIsMobile();
   const { activeCamera, navigationPOV } = useExperience();
+  const [ktxReady, setKtxReady] = useState(false);
+
   return (
     <>
       {isMobile ? (
@@ -37,7 +39,8 @@ function App() {
         <>
           <PowerMeter />
           <Canvas>
-            <KTX2Support />
+            {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
+
             <PCExperience />
             {activeCamera === "presetCamera" && <CameraManager />}
             {activeCamera === "blenderCamera" && (

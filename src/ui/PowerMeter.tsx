@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
+import useExperience from "../hooks/useExperience";
+
 export default function PowerMeter() {
   const [power, setPower] = useState(0); // 0-100
   const [stoppedPower, setStoppedPower] = useState<number | null>(null);
@@ -11,6 +13,7 @@ export default function PowerMeter() {
   const raf = useRef<number>();
   const fillRaf = useRef<number>();
   const loopCount = useRef(0);
+  const { playSFX, setGolfSwingState } = useExperience();
 
   // Start the animation
   const start = () => {
@@ -23,6 +26,8 @@ export default function PowerMeter() {
     loopCount.current = 0;
     setShowFill(false);
     setFillHeight(0);
+    playSFX("new_turn");
+    setGolfSwingState("startSwing");
     animate();
   };
 
@@ -51,7 +56,7 @@ export default function PowerMeter() {
           if (stoppedPowerRef.current !== null) {
             setShowFill(true);
             animateFill(0, stoppedPowerRef.current!);
-            console.log("FILLING NOW?, ", showFill);
+            setTimeout(() => setGolfSwingState("releaseSwing"), 0);
           }
 
           setRunning(false);
@@ -87,6 +92,7 @@ export default function PowerMeter() {
   const stop = () => {
     setStoppedPower(power);
     stoppedPowerRef.current = power;
+    playSFX("swing");
   };
 
   useEffect(() => {
