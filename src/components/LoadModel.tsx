@@ -41,9 +41,9 @@ export default function LoadModel({
   const animationNames = Object.keys(actions);
   const animationHelper = useAnimationHelper(actions, animationNames, group);
 
-  useEffect(() => {
-    console.log("Actions available: ", actions);
-  }, [actions]);
+  // useEffect(() => {
+  //   console.log("Actions available: ", actions);
+  // }, [actions]);
 
   // Leva button to play all animations once
   useControls("Model Controls", {

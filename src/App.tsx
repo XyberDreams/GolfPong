@@ -20,6 +20,7 @@ import BGSoundToggleIcon from "./sound/BGSoundToggleIcon";
 import SFXButtons from "./sound/SFXButton";
 import KTX2Support from "./components/KTX2Support";
 import PCExperience from "./components/PCExperience";
+import PowerMeter from "./ui/PowerMeter";
 
 function App() {
   const isMobile = useIsMobile();
@@ -34,6 +35,7 @@ function App() {
         </>
       ) : (
         <>
+          <PowerMeter />
           <Canvas>
             <KTX2Support />
             <PCExperience />
@@ -45,13 +47,10 @@ function App() {
             <CameraSwitcher />
             <Environment preset="city" />
           </Canvas>
-
           {/* <BackButton/>
           <Portal/> */}
-
           <BGSoundToggleIcon />
           <SFXButtons />
-
           {/* <Canvas>
             <LoadModel url="diorama" />
             
