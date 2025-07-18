@@ -11,6 +11,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import { useExperience } from "../hooks/useExperience";
 import useAnimationHelper from "../hooks/useAnimationHelper";
 import { useControls, button } from "leva";
+import { DissolveMaterial } from "../utils/DissolveMaterial";
 
 export default function GP_Scene(props) {
   const group = React.useRef();
@@ -19,6 +20,7 @@ export default function GP_Scene(props) {
   const trailRef = useRef([]);
   const [, setRerender] = useState(0);
   const stillFrames = useRef(0);
+  const [dissolveVisible, setDissolveVisible] = useState(false);
 
   const prevPosRef = useRef(new THREE.Vector3());
   const lastLoggedTrailPoint = useRef(null);
@@ -125,6 +127,7 @@ export default function GP_Scene(props) {
         }
       });
     }),
+    Dissolve: button(() => setDissolveVisible((prev) => !prev)),
   });
 
   useEffect(() => {
@@ -144,35 +147,25 @@ export default function GP_Scene(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group>
-        <Trail
-          width={0.1}
-          color="hotpink"
-          length={30} // Number of points in the trail
-          decay={0.8} // How fast the trail fades (1 = no fade, <1 = faster fade)
-          local={false}
-          stride={0.01} // Minimum distance between points
-          interval={1} // Frames between trail updates
-          target={ballRef} // Attach trail to your ball
+        <group
+          ref={ballRef}
+          name="ball"
+          position={[0, -2.273, 0]}
+          rotation={[0, -1.556, 0]}
+          scale={0.038}
         >
-          <group
-            ref={ballRef}
-            name="ball"
-            position={[0, -2.273, 0]}
-            rotation={[0, -1.556, 0]}
-            scale={0.038}
-          >
-            <mesh
-              name="ball_primitive0"
-              geometry={nodes.ball_primitive0.geometry}
-              material={materials.Material}
-            />
-            <mesh
-              name="ball_primitive1"
-              geometry={nodes.ball_primitive1.geometry}
-              material={materials["Material.001"]}
-            />
-          </group>
-        </Trail>
+          <mesh
+            name="ball_primitive0"
+            geometry={nodes.ball_primitive0.geometry}
+            material={materials.Material}
+          />
+          <mesh
+            name="ball_primitive1"
+            geometry={nodes.ball_primitive1.geometry}
+            material={materials["Material.001"]}
+          />
+        </group>
+
         <mesh
           name="targetmat"
           geometry={nodes.targetmat.geometry}
@@ -188,13 +181,51 @@ export default function GP_Scene(props) {
           position={[0, -2.344, -2.775]}
           scale={[1.517, 3.437, 3.437]}
         />
-        <mesh
+        {/* <mesh
           name="puttingg_green_primitive0"
           geometry={nodes.puttingg_green_primitive0.geometry}
           material={materials["Material.003"]}
           position={[0, -2.344, 0]}
           scale={[0.185, 0.185, 0.186]}
-        />
+        >
+          {dissolveVisible && (
+            <DissolveMaterial
+              baseMaterial={materials["Material.003"]}
+              visible={dissolveVisible}
+      
+            />
+          )}
+        </mesh> */}
+
+        {!dissolveVisible ? (
+          <mesh
+            name="puttingg_green_primitive0"
+            geometry={nodes.puttingg_green_primitive0.geometry}
+            material={materials["Material.003"]}
+            position={[0, -2.344, 0]}
+            scale={[0.185, 0.185, 0.186]}
+          />
+        ) : (
+          <mesh
+            name="puttingg_green_primitive0"
+            geometry={nodes.puttingg_green_primitive0.geometry}
+            position={[0, -2.344, 0]}
+            scale={[0.185, 0.185, 0.186]}
+          >
+            <DissolveMaterial
+              baseMaterial={materials["Material.003"]}
+              visible={dissolveVisible}
+            />
+          </mesh>
+        )}
+
+        {/* <DissolveMaterial
+          name="puttingg_green_primitive0"
+          geometry={nodes.puttingg_green_primitive0.geometry}
+          baseMaterial={materials["Material.003"]}
+          position={[0, -2.344, 0]}
+          scale={[0.185, 0.185, 0.186]}
+        /> */}
         <mesh
           name="puttingg_green_primitive1"
           geometry={nodes.puttingg_green_primitive1.geometry}

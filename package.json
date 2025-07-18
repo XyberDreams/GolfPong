@@ -16,6 +16,7 @@
     "@tailwindcss/vite": "^4.1.11",
     "clsx": "^2.1.1",
     "ecctrl": "^1.0.96",
+    "gl-noise": "^1.6.1",
     "leva": "^0.10.0",
     "maath": "^0.10.8",
     "mixpanel-browser": "^2.65.0",
@@ -25,6 +26,7 @@
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.11",
     "three": "^0.177.0",
+    "three-custom-shader-material": "^6.3.7",
     "wouter": "^3.7.1"
   },
   "devDependencies": {
