@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import useExperience from "../hooks/useExperience";
+import { useTimeout } from "../hooks/useTimeout";
 
 export default function PowerMeter() {
   const [power, setPower] = useState(0); // 0-100
@@ -34,7 +35,7 @@ export default function PowerMeter() {
   // Animate the bar up and down in a loop
   const animate = () => {
     setPower((prev) => {
-      let next = prev + direction.current * 1.05; // speed
+      let next = prev + direction.current * 1.02; // speed
       if (next >= 100) {
         next = 100;
         direction.current = -1;
@@ -56,7 +57,8 @@ export default function PowerMeter() {
           if (stoppedPowerRef.current !== null) {
             setShowFill(true);
             animateFill(0, stoppedPowerRef.current!);
-            setTimeout(() => setGolfSwingState("releaseSwing"), 0);
+          } else {
+            setGolfSwingState("noSwing");
           }
 
           setRunning(false);
@@ -72,7 +74,7 @@ export default function PowerMeter() {
   };
 
   const animateFill = (from: number, to: number) => {
-    const DURATION = 300; // ms for fill animation
+    const DURATION = 400; // ms for fill animation
     const startTime = performance.now();
 
     const step = (now: number) => {
@@ -90,9 +92,23 @@ export default function PowerMeter() {
 
   // Stop the animation (not used yet)
   const stop = () => {
+    playSFX("swing");
+    setTimeout(() => {
+      playSFX("golf_contact_hit7");
+    }, 700);
     setStoppedPower(power);
     stoppedPowerRef.current = power;
-    playSFX("swing");
+    if (power >= 45 && power <= 55) {
+      setGolfSwingState("successSwing");
+      setTimeout(() => {
+        playSFX("swing_success");
+      }, 3000);
+    } else {
+      setGolfSwingState("missedSwing");
+      setTimeout(() => {
+        playSFX("swing_miss");
+      }, 3000);
+    }
   };
 
   useEffect(() => {
@@ -116,11 +132,21 @@ export default function PowerMeter() {
   return (
     <div className="absolute z-[500] flex flex-col items-center">
       <div
-        className="relative w-8 h-52 border-4 border-[#ffe600] rounded-lg mb-4 box-border"
-        style={{ background: "rgba(43,76,26,0.7)" }}
+        className="relative w-8 h-52 border-blue rounded-lg mb-4 box-border"
+        style={{
+          background: `linear-gradient(
+      to top,
+      #ff2a2a 0%,    /* yellow: 0-40% */
+      #ff2a2a 45%,
+      #00ff00 45%,   /* green: 40-60% */
+      #00ff00 55%,
+      #ff2a2a 55%,   /* red: 60-100% */
+      #ff2a2a 100%
+    )`,
+        }}
       >
         {/* Dots (static) */}
-        {[0.25, 0.5, 0.75].map((pos, i) => (
+        {/* {[0.25, 0.5, 0.75].map((pos, i) => (
           <div
             key={i}
             className="absolute left-1/2 z-20 bg-white rounded-full"
@@ -131,7 +157,7 @@ export default function PowerMeter() {
               height: 10,
             }}
           />
-        ))}
+        ))} */}
         {showFill && (
           <div
             className="absolute left-0 bottom-0 w-full z-10 bg-[#4a3fc4] opacity-100 rounded-b-lg transition-all"

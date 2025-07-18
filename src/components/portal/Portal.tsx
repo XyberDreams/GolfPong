@@ -177,7 +177,7 @@ export function BackButton() {
   const isVisible = !!params;
   return (
     <PulsatingButton
-      className="fixed top-8 left-8 z-50 px-4 py-2 text-black text-4xl bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 font-semibold transition-opacity duration-700"
+      className="fixed top-8 left-8 z-50 text-lg px-4 py-2 text-black text-4xl bg-white border border-gray-300 rounded-lg shadow hover:bg-gray-100 font-semibold transition-opacity duration-700"
       pulseColor="#00FF00"
       duration="1.5s"
       style={{

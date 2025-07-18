@@ -29,7 +29,7 @@ export const CurrentStateArray: CurrentState[] = [
   "main",
 ];
 
-export type GolfSwingState = "default" | "noSwing" | "startSwing" | "releaseSwing" | "swingComplete";
+export type GolfSwingState = "default" | "noSwing" | "startSwing" | "releaseSwing" | "successSwing" | "missedSwing";
 
 // Locked Control State
 export const lockedState = {

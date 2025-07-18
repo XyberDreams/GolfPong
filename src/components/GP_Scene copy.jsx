@@ -130,7 +130,7 @@ export default function GP_Scene(props) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isBallMoving.current && trailRef.current.length > 0) {
-        trailRef.current.shift();
+        trailRef.current.pop();
         setRerender((r) => r + 1);
         console.log(
           "Trail updated (fade):",
@@ -144,35 +144,41 @@ export default function GP_Scene(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group>
-        <Trail
-          width={0.1}
-          color="hotpink"
-          length={30} // Number of points in the trail
-          decay={0.8} // How fast the trail fades (1 = no fade, <1 = faster fade)
-          local={false}
-          stride={0.01} // Minimum distance between points
-          interval={1} // Frames between trail updates
-          target={ballRef} // Attach trail to your ball
+        {/* <group
+          name="golfclub"
+          position={[0.006, -2.25, 0.15]}
+          rotation={[3.041, 0.001, 2.725]}
+          scale={0.156}
         >
-          <group
-            ref={ballRef}
-            name="ball"
-            position={[0, -2.273, 0]}
-            rotation={[0, -1.556, 0]}
-            scale={0.038}
-          >
-            <mesh
-              name="ball_primitive0"
-              geometry={nodes.ball_primitive0.geometry}
-              material={materials.Material}
-            />
-            <mesh
-              name="ball_primitive1"
-              geometry={nodes.ball_primitive1.geometry}
-              material={materials["Material.001"]}
-            />
-          </group>
-        </Trail>
+          <mesh
+            name="golfclub_primitive0"
+            geometry={nodes.golfclub_primitive0.geometry}
+            material={materials.golf_club}
+          />
+          <mesh
+            name="golfclub_primitive1"
+            geometry={nodes.golfclub_primitive1.geometry}
+            material={materials["Material.004"]}
+          />
+        </group> */}
+        <group
+          ref={ballRef}
+          name="ball"
+          position={[0, -2.273, 0]}
+          rotation={[0, -1.556, 0]}
+          scale={0.038}
+        >
+          <mesh
+            name="ball_primitive0"
+            geometry={nodes.ball_primitive0.geometry}
+            material={materials.Material}
+          />
+          <mesh
+            name="ball_primitive1"
+            geometry={nodes.ball_primitive1.geometry}
+            material={materials["Material.001"]}
+          />
+        </group>
         <mesh
           name="targetmat"
           geometry={nodes.targetmat.geometry}

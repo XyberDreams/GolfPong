@@ -13,7 +13,7 @@ import { Portal, BackButton } from "./components/portal/Portal";
 import { CharacterController } from "./components/character controller/CharacterController";
 import { Physics } from "@react-three/rapier";
 import Floor from "./components/objects/Floor";
-import { Environment } from "@react-three/drei";
+import { CameraControls, Environment, PerspectiveCamera } from "@react-three/drei";
 import OneShot from "./components/navigation/OneShot";
 import Hotspot from "./components/Hotspot";
 import BGSoundToggleIcon from "./sound/BGSoundToggleIcon";
@@ -21,6 +21,9 @@ import SFXButtons from "./sound/SFXButton";
 import KTX2Support from "./components/KTX2Support";
 import PCExperience from "./components/PCExperience";
 import PowerMeter from "./ui/PowerMeter";
+import SwingMessage from "./ui/SwingMessage";
+import PowerMeterRevised from "./ui/PowerMeterRevised";
+import PowerBarImage from "./ui/PowerBarImage";
 
 function App() {
   const isMobile = useIsMobile();
@@ -31,29 +34,46 @@ function App() {
     <>
       {isMobile ? (
         <>
-          <Canvas>
-            <LoadModel url="lipstick" />
-          </Canvas>
+          {/* <PowerMeter /> */}
+          {/* <PowerMeterRevised /> */}
+   
+        {/* <PowerBarImage /> */}
+
+          {/* <SwingMessage /> */}
+          {/* <Canvas>
+            {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
+
+            <PCExperience />
+            {activeCamera === "blenderCamera" && (
+              <BlenderCamera url="/golfpong/gp_camera" />
+            )}
+            <CameraSwitcher />
+            <Environment preset="city" />
+          </Canvas> */}
         </>
       ) : (
         <>
-          <PowerMeter />
+          {/* <PowerMeter /> */}
+          {/* <PowerMeterRevised />
+          <SwingMessage /> */}
           <Canvas>
             {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
 
             <PCExperience />
+            <CameraControls/>
             {activeCamera === "presetCamera" && <CameraManager />}
-            {activeCamera === "blenderCamera" && (
+            {/* {activeCamera === "blenderCamera" && (
               <BlenderCamera url="/golfpong/gp_camera" />
-            )}
+            )} */}
             {activeCamera === "animatedCamera" && <Test_Camera />}
             <CameraSwitcher />
             <Environment preset="city" />
           </Canvas>
+          
           {/* <BackButton/>
           <Portal/> */}
-          <BGSoundToggleIcon />
-          <SFXButtons />
+          {/* <BGSoundToggleIcon />
+          <SFXButtons /> */}
           {/* <Canvas>
             <LoadModel url="diorama" />
             
