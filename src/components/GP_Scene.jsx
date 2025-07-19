@@ -12,6 +12,7 @@ import { useExperience } from "../hooks/useExperience";
 import useAnimationHelper from "../hooks/useAnimationHelper";
 import { useControls, button } from "leva";
 import { DissolveMaterial } from "../utils/DissolveMaterial";
+import { CustomTrail } from "./CustomTrail";
 
 export default function GP_Scene(props) {
   const group = React.useRef();
@@ -147,24 +148,34 @@ export default function GP_Scene(props) {
   return (
     <group ref={group} {...props} dispose={null}>
       <group>
-        <group
-          ref={ballRef}
-          name="ball"
-          position={[0, -2.273, 0]}
-          rotation={[0, -1.556, 0]}
-          scale={0.038}
+        <CustomTrail
+          width={0.2}
+          color="hotpink"
+          length={5}
+          decay={1.5}
+          local={false}
+          stride={0.01}
+          interval={5}
         >
-          <mesh
-            name="ball_primitive0"
-            geometry={nodes.ball_primitive0.geometry}
-            material={materials.Material}
-          />
-          <mesh
-            name="ball_primitive1"
-            geometry={nodes.ball_primitive1.geometry}
-            material={materials["Material.001"]}
-          />
-        </group>
+          <group
+            ref={ballRef}
+            name="ball"
+            position={[0, -2.273, 0]}
+            rotation={[0, -1.556, 0]}
+            scale={0.038}
+          >
+            <mesh
+              name="ball_primitive0"
+              geometry={nodes.ball_primitive0.geometry}
+              material={materials.Material}
+            />
+            <mesh
+              name="ball_primitive1"
+              geometry={nodes.ball_primitive1.geometry}
+              material={materials["Material.001"]}
+            />
+          </group>
+        </CustomTrail>
 
         <mesh
           name="targetmat"
@@ -243,7 +254,7 @@ export default function GP_Scene(props) {
         />
       </group>
 
-      {trailRef.current.length > 1 && (
+      {/* {trailRef.current.length > 1 && (
         <line key={trailKey}>
           <bufferGeometry>
             <bufferAttribute
@@ -259,7 +270,7 @@ export default function GP_Scene(props) {
           </bufferGeometry>
           <lineBasicMaterial color="red" linewidth={20} />
         </line>
-      )}
+      )} */}
     </group>
   );
 }

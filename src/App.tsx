@@ -60,7 +60,7 @@ function App() {
             {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
 
             <PCExperience />
-            <CameraControls/>
+            <CameraControls />
             {activeCamera === "presetCamera" && <CameraManager />}
             {/* {activeCamera === "blenderCamera" && (
               <BlenderCamera url="/golfpong/gp_camera" />
