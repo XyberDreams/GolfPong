@@ -13,7 +13,11 @@ import { Portal, BackButton } from "./components/portal/Portal";
 import { CharacterController } from "./components/character controller/CharacterController";
 import { Physics } from "@react-three/rapier";
 import Floor from "./components/objects/Floor";
-import { CameraControls, Environment, PerspectiveCamera } from "@react-three/drei";
+import {
+  CameraControls,
+  Environment,
+  PerspectiveCamera,
+} from "@react-three/drei";
 import OneShot from "./components/navigation/OneShot";
 import Hotspot from "./components/Hotspot";
 import BGSoundToggleIcon from "./sound/BGSoundToggleIcon";
@@ -24,6 +28,7 @@ import PowerMeter from "./ui/PowerMeter";
 import SwingMessage from "./ui/SwingMessage";
 import PowerMeterRevised from "./ui/PowerMeterRevised";
 import PowerBarImage from "./ui/PowerBarImage";
+import { GP_Scene2 } from "./components/Gp_scene2";
 
 function App() {
   const isMobile = useIsMobile();
@@ -34,10 +39,11 @@ function App() {
     <>
       {isMobile ? (
         <>
-          <PowerMeter />
           <PowerMeterRevised />
-   
-        {/* <PowerBarImage /> */}
+          <SwingMessage />
+          <GP_Scene2 />
+
+          {/* <PowerBarImage /> */}
 
           {/* <SwingMessage /> */}
           {/* <Canvas>
@@ -55,24 +61,24 @@ function App() {
         <>
           {/* <PowerMeter /> */}
           <PowerMeterRevised />
-          <SwingMessage />
-          {/* <Canvas>
-            {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
+          {/* <SwingMessage /> */}
+          <Canvas>
+            {/* {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />} */}
+            <GP_Scene2 />
 
-            <PCExperience />
+            {/* <PCExperience /> */}
             <CameraControls />
-            {activeCamera === "presetCamera" && <CameraManager />}
+            {/* {activeCamera === "presetCamera" && <CameraManager />}
             {activeCamera === "blenderCamera" && (
               <BlenderCamera url="/golfpong/gp_camera" />
             )}
             {activeCamera === "animatedCamera" && <Test_Camera />}
-            <CameraSwitcher />
+            <CameraSwitcher /> */}
             <Environment preset="city" />
-          </Canvas> */}
-          
+          </Canvas>
+
           {/* <BGSoundToggleIcon />
           <SFXButtons /> */}
-
         </>
       )}
     </>

@@ -19,7 +19,7 @@ export default function PowerMeterRevised() {
   const [isShot, setIsShot] = useState("default");
   const [pointerAngle, setPointerAngle] = useState(0);
   const [paused, setPaused] = useState(true);
-  const { shotType, setShotType, shotDirection, setShotDirection } =
+  const { shotType, setShotType, shotDirection, setShotDirection, setHoles, playSFX } =
     useExperience();
   const { handleShot } = useGolfShotLogic();
 
@@ -145,7 +145,7 @@ export default function PowerMeterRevised() {
   // }
 
   return (
-    <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
+    <div style={{ position: "absolute", width: "100vw", height: "100vh" }}>
       <motion.div
         className="absolute z-[500] flex flex-col items-center justify-center"
         style={{
@@ -337,6 +337,7 @@ export default function PowerMeterRevised() {
               setPaused(false);
               setBallVisible(true); // Show the ball again
               setIsDragging(false); // Hide the power bar overlay
+              playSFX("new_turn")
             }}
           >
             Reset!
@@ -363,6 +364,27 @@ export default function PowerMeterRevised() {
             }}
           >
             Random Shot
+          </button>
+                    <button
+            style={{
+              position: "absolute",
+              left: "50%",
+              top: 360,
+              transform: "translateX(-50%)",
+              zIndex: 5000,
+              padding: "10px 24px",
+              fontWeight: 700,
+              fontSize: 18,
+              background: "#f0f",
+              border: "2px solid #222",
+              borderRadius: 8,
+              cursor: "pointer",
+            }}
+            onClick={() => {
+              setHoles?.([true, true, true, true, true, true]);
+            }}
+          >
+            Reset Holes
           </button>
         </motion.div>
       )}
