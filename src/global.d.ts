@@ -2,6 +2,7 @@
 declare module "*.jsx";
 declare module "mixpanel-browser";
 declare module "./components/GP_Scene";
+declare module "./components/GP_Scene.jsx";
 declare module "./components/Test_Dissolve";
 declare module "./components/GolfBallTrail";
 

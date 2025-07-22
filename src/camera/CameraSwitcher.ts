@@ -4,7 +4,7 @@ import { CurrentStateArray } from "../context/ExperienceContext";
 import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import mixpanel from "../mixpanel";
+// import mixpanel from "../mixpanel";
 
 export default function CameraSwitcher() {
   const { activeCamera, setActiveCamera, setCurrentState } = useExperience();
