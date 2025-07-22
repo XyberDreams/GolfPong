@@ -39,6 +39,8 @@ export const lockedState = {
   turnSpeed: 0,
 };
 
+export type ShotDirection = "default" | "left" | "right" | "center";
+
 // Standard State
 export const ecctrlDistance = () => {
   if (window.innerWidth <= 1024) return "-5";
@@ -102,6 +104,10 @@ export interface ExperienceContextProps {
   setGolfSwingState: React.Dispatch<React.SetStateAction<GolfSwingState>>;
   shotType?: ShotType;
   setShotType?: React.Dispatch<React.SetStateAction<ShotType>>;
+  shotDirection?: ShotDirection;
+  setShotDirection?: React.Dispatch<React.SetStateAction<ShotDirection>>;
+  holes?: boolean[];
+  setHoles?: React.Dispatch<React.SetStateAction<boolean[]>>;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -128,6 +134,8 @@ export const ExperienceProvider = ({
   //GOLF SPECIFIC LOGIC
   const [golfSwingState, setGolfSwingState] = useState<GolfSwingState>("default");
   const [shotType, setShotType] = useState<ShotType>("default");
+  const [shotDirection, setShotDirection] = useState<ShotDirection>("default");
+  const [holes, setHoles] = useState([true, true, true, true, true, true]);
 
 
   //SOUND
@@ -175,6 +183,10 @@ export const ExperienceProvider = ({
         setGolfSwingState,
         shotType,
         setShotType,
+        shotDirection,
+        setShotDirection,
+        holes,
+        setHoles,
       }}
     >
       {children}

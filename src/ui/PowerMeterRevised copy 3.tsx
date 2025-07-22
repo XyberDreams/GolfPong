@@ -1,14 +1,12 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import useExperience from "../hooks/useExperience";
-import useGolfShotLogic from "../hooks/useGolfShotLogic";
 
 // Replace with your actual PNG path
-const BALL_IMG = "/golfpong/golfball7.png";
+const BALL_IMG = "/golfpong/golfball6.png";
 
 export default function PowerMeterRevised() {
   const [dragY, setDragY] = useState(0);
-  const [dragX, setDragX] = useState(0);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
@@ -18,23 +16,16 @@ export default function PowerMeterRevised() {
   const [isShot, setIsShot] = useState("default");
   const [pointerAngle, setPointerAngle] = useState(0);
   const [paused, setPaused] = useState(true);
-  const { shotType, setShotType, shotDirection, setShotDirection } =
-    useExperience();
-  const { handleShot } = useGolfShotLogic();
+  const { shotType, setShotType } = useExperience();
 
   // Clamp dragY between 0 and 500, then map to scale between 0.5 and 1.2
-  const minScale = 0.2;
+  const minScale = 0.8;
   const maxScale = 1;
   const maxDrag = 300;
   const scale =
     minScale + (Math.min(dragY, maxDrag) / maxDrag) * (maxScale - minScale);
 
   const powerLevel = (pointerAngle + 50) / 90; // 0 (min) to 1 (max)
-
-  const directions = ["left", "center", "right"] as const;
-  function getRandomDirection() {
-    return directions[Math.floor(Math.random() * directions.length)];
-  }
 
   useEffect(() => {
     if (paused) return; // Skip animation if paused
@@ -73,27 +64,6 @@ export default function PowerMeterRevised() {
     return "default";
   }
 
-  function getShotDirection(x: number) {
-    if (x < -40) {
-      if (setShotDirection) setShotDirection("right");
-    } // Dragged left, shoot right
-    if (x > 40) {
-      if (setShotDirection) setShotDirection("left");
-    } // Dragged right, shoot left
-    if (x >= -40 && x <= 40) {
-      if (setShotDirection) setShotDirection("center");
-    } // Dragged center, shoot straight
-  }
-
-  useEffect(() => {
-    console.log("shot direction: ", shotDirection);
-    console.log("Shot Type:", shotType);
-  }, [shotDirection]);
-
-  // useEffect(() => {
-  //   console.log(" Drag X: ", dragX);
-  // }, [dragX]);
-
   useEffect(() => {
     if (isDragging) {
       setPaused(false);
@@ -102,15 +72,11 @@ export default function PowerMeterRevised() {
     }
   }, [isDragging]);
 
-  const triggerShot = () => {
-    setPaused(true);
-    // setIsDragging(false);
-  };
-
   useEffect(() => {
     if (paused) {
       const shotRef = getShotType(powerLevel);
       if (setShotType) setShotType(shotRef);
+      console.log("Shot Type:", shotType);
     }
   }, [paused]);
 
@@ -155,20 +121,20 @@ export default function PowerMeterRevised() {
           transform: "translateX(-50%)",
         }}
         drag
-        dragSnapToOrigin={true}
         dragConstraints={{ top: 0, bottom: 5000, left: -5000, right: 5000 }}
         dragElastic={0.2}
         onDragStart={() => setIsDragging(true)}
         onDrag={(event, info) => {
           setOffset({ x: info.offset.x, y: info.offset.y });
           setDragY(info.offset.y);
-          setDragX(info.offset.x);
         }}
         onDragEnd={() => {
-          triggerShot();
-          getShotDirection(dragX);
+          setIsDragging(false);
+          setOffset({ x: 0, y: 0 });
+          // setX(0);
+          // setY(0);
         }}
-        // animate={{ x: offset.x, y: offset.y }}
+        animate={{ x: offset.x, y: offset.y }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
         {/* Golf Ball PNG */}
@@ -233,7 +199,7 @@ export default function PowerMeterRevised() {
         {/* Text Overlay */}
       </motion.div>
 
-      {!isDragging && (
+      {isDragging && (
         <motion.div
           style={{
             position: "absolute",
@@ -251,7 +217,7 @@ export default function PowerMeterRevised() {
         >
           {/* Power Bar Image */}
           <img
-            className="pointer-events-none"
+          className="pointer-events-none"
             src="/golfpong/power_bar2.png"
             alt="Power Bar"
             style={{
@@ -311,29 +277,6 @@ export default function PowerMeterRevised() {
             // disabled={paused}
           >
             Shoot!
-          </button>
-          <button
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: 300,
-              transform: "translateX(-50%)",
-              zIndex: 5000,
-              padding: "10px 24px",
-              fontWeight: 700,
-              fontSize: 18,
-              background: "#0ff",
-              border: "2px solid #222",
-              borderRadius: 8,
-              cursor: "pointer",
-            }}
-            onClick={() => {
-              const dir = getRandomDirection();
-              const result = handleShot(dir);
-              console.log(`Random shot direction: ${dir}`, result);
-            }}
-          >
-            Random Shot
           </button>
         </motion.div>
       )}
