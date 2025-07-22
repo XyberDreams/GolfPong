@@ -12,6 +12,7 @@ export default function PowerMeterRevised() {
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const [ballVisible, setBallVisible] = useState(true);
 
   const startYRef = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -166,74 +167,99 @@ export default function PowerMeterRevised() {
         }}
         onDragEnd={() => {
           triggerShot();
-          getShotDirection(dragX);
+          setBallVisible(false);
+
+          // Determine direction from dragX
+          let direction: "left" | "center" | "right";
+          if (dragX < -40) {
+            direction = "right";
+            setShotDirection?.("right");
+          } else if (dragX > 40) {
+            direction = "left";
+            setShotDirection?.("left");
+          } else {
+            direction = "center";
+            setShotDirection?.("center");
+          }
+
+          const currentShotType = getShotType(powerLevel);
+
+          if (currentShotType === "shotPerfect") {
+            const result = handleShot(direction);
+            console.log("Shot result:", result);
+          } else {
+            console.log("Shot type not perfect, no shot taken");
+          }
         }}
         // animate={{ x: offset.x, y: offset.y }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
       >
-        {/* Golf Ball PNG */}
-        <img
-          src={BALL_IMG}
-          className="pointer-events-none"
-          alt="Golf Ball"
-          style={{
-            width: 90,
-            height: 90,
-            zIndex: 500,
-            position: "absolute",
-            left: 25,
-            top: 25,
-          }}
-        />
-        <div
-          className="font-[800] text-xl"
-          style={{
-            position: "absolute",
-            left: 25, // match ball's left
-            top: 25,
-            width: 90,
-            height: 90,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 4,
-            color: "#222",
-            //   textShadow: "0 2px 0 #fff, 0 0px 8px #bbb",
-            // pointerEvents: "none",
-            textAlign: "center",
-            flexDirection: "column",
-          }}
-        >
-          <span>PULL</span>
-          <span>BACK</span>
-        </div>
-        {/* Animated Ring */}
-        {!isDragging && (
-          <svg
-            width={140}
-            height={140}
-            style={{ position: "absolute", left: 0, top: 0, zIndex: 3 }}
-          >
-            <circle
-              cx={70}
-              cy={70}
-              r={60}
-              fill="none"
-              stroke="#000000"
-              strokeWidth={6}
-              strokeDasharray="20 10"
+        {ballVisible && (
+          <>
+            <img
+              src={BALL_IMG}
+              className="pointer-events-none"
+              alt="Golf Ball"
               style={{
-                animation: "spin 5s linear infinite",
-                transformOrigin: "center",
+                width: 90,
+                height: 90,
+                zIndex: 500,
+                position: "absolute",
+                left: 25,
+                top: 25,
               }}
             />
-          </svg>
+
+            <div
+              className="font-[800] text-xl"
+              style={{
+                position: "absolute",
+                left: 25,
+                top: 25,
+                width: 90,
+                height: 90,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                zIndex: 4,
+                color: "#222",
+
+                textAlign: "center",
+                flexDirection: "column",
+              }}
+            >
+              <span>PULL</span>
+              <span>BACK</span>
+            </div>
+
+            {!isDragging && (
+              <svg
+                width={140}
+                height={140}
+                style={{ position: "absolute", left: 0, top: 0, zIndex: 3 }}
+              >
+                <circle
+                  cx={70}
+                  cy={70}
+                  r={60}
+                  fill="none"
+                  stroke="#000000"
+                  strokeWidth={6}
+                  strokeDasharray="20 10"
+                  style={{
+                    animation: "spin 5s linear infinite",
+                    transformOrigin: "center",
+                  }}
+                />
+              </svg>
+            )}
+          </>
         )}
 
         {/* Text Overlay */}
       </motion.div>
 
-      {!isDragging && (
+      {isDragging && (
         <motion.div
           style={{
             position: "absolute",
@@ -307,10 +333,13 @@ export default function PowerMeterRevised() {
               borderRadius: 8,
               cursor: "pointer",
             }}
-            onClick={() => setPaused(!paused)}
-            // disabled={paused}
+            onClick={() => {
+              setPaused(false);
+              setBallVisible(true); // Show the ball again
+              setIsDragging(false); // Hide the power bar overlay
+            }}
           >
-            Shoot!
+            Reset!
           </button>
           <button
             style={{
