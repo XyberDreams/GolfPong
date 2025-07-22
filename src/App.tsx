@@ -34,8 +34,8 @@ function App() {
     <>
       {isMobile ? (
         <>
-          {/* <PowerMeter /> */}
-          {/* <PowerMeterRevised /> */}
+          <PowerMeter />
+          <PowerMeterRevised />
    
         {/* <PowerBarImage /> */}
 
