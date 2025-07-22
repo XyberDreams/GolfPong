@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "motion/react";
-import useExperience from "../hooks/useExperience";
 
 // Replace with your actual PNG path
 const BALL_IMG = "/golfpong/golfball6.png";
@@ -13,10 +12,6 @@ export default function PowerMeterRevised() {
 
   const startYRef = useRef<number | null>(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [isShot, setIsShot] = useState("default");
-  const [pointerAngle, setPointerAngle] = useState(0);
-  const [paused, setPaused] = useState(true);
-  const { shotType, setShotType } = useExperience();
 
   // Clamp dragY between 0 and 500, then map to scale between 0.5 and 1.2
   const minScale = 0.8;
@@ -25,89 +20,34 @@ export default function PowerMeterRevised() {
   const scale =
     minScale + (Math.min(dragY, maxDrag) / maxDrag) * (maxScale - minScale);
 
-  const powerLevel = (pointerAngle + 50) / 90; // 0 (min) to 1 (max)
-
-  useEffect(() => {
-    if (paused) return; // Skip animation if paused
-    let direction = 1;
-    let angle = pointerAngle; // Start from current angle
-    let raf: number;
-
-    function animate() {
-      angle += direction * 0.7; // Adjust speed here
-      if (angle >= 50) {
-        angle = 50;
-        direction = -1;
-      } else if (angle <= -50) {
-        angle = -50;
-        direction = 1;
-      }
-      setPointerAngle(angle);
-      raf = requestAnimationFrame(animate);
-    }
-
-    animate();
-    return () => cancelAnimationFrame(raf);
-  }, [paused]);
-
-  function getShotType(power: number) {
-    if (power < 0.15 || power > 0.85) {
-      return "shotLong";
-    } else if (
-      (power >= 0.6 && power <= 0.85) ||
-      (power >= 0.15 && power < 0.5)
-    ) {
-      return "shotShort";
-    } else if (power >= 0.5 && power < 0.6) {
-      return "shotPerfect";
-    }
-    return "default";
+  function onPointerDown(e: PointerEvent) {
+    setIsDragging(true);
+    startYRef.current = e.clientY;
+    window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
   }
 
-  useEffect(() => {
-    if (isDragging) {
-      setPaused(false);
+  function onPointerMove(e: PointerEvent) {
+    if (startYRef.current === null) return;
+
+    const deltaY = e.clientY - startYRef.current;
+    if (deltaY < 0) {
+      console.log("Pulling back");
+      setDragY(0);
     } else {
-      setPaused(true);
+      setDragY(Math.min(deltaY, 500)); // Limit to 100px max pull
+      console.log("Dragging down:", deltaY);
     }
-  }, [isDragging]);
+  }
 
-  useEffect(() => {
-    if (paused) {
-      const shotRef = getShotType(powerLevel);
-      if (setShotType) setShotType(shotRef);
-      console.log("Shot Type:", shotType);
-    }
-  }, [paused]);
+  function onPointerUp(e: PointerEvent) {
+    setIsDragging(false);
+    startYRef.current = null;
+    window.removeEventListener("pointermove", onPointerMove);
+    window.removeEventListener("pointerup", onPointerUp);
 
-  // function onPointerDown(e: PointerEvent) {
-  //   setIsDragging(true);
-  //   startYRef.current = e.clientY;
-  //   window.addEventListener("pointermove", onPointerMove);
-  //   window.addEventListener("pointerup", onPointerUp);
-  // }
-
-  // function onPointerMove(e: PointerEvent) {
-  //   if (startYRef.current === null) return;
-
-  //   const deltaY = e.clientY - startYRef.current;
-  //   if (deltaY < 0) {
-  //     console.log("Pulling back");
-  //     setDragY(0);
-  //   } else {
-  //     setDragY(Math.min(deltaY, 500));
-  //     console.log("Dragging down:", deltaY);
-  //   }
-  // }
-
-  // function onPointerUp(e: PointerEvent) {
-  //   setIsDragging(false);
-  //   startYRef.current = null;
-  //   window.removeEventListener("pointermove", onPointerMove);
-  //   window.removeEventListener("pointerup", onPointerUp);
-
-  //   console.log("Released with dragY:", dragY);
-  // }
+    console.log("Released with dragY:", dragY);
+  }
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
@@ -140,7 +80,6 @@ export default function PowerMeterRevised() {
         {/* Golf Ball PNG */}
         <img
           src={BALL_IMG}
-          className="pointer-events-none"
           alt="Golf Ball"
           style={{
             width: 90,
@@ -165,7 +104,7 @@ export default function PowerMeterRevised() {
             zIndex: 4,
             color: "#222",
             //   textShadow: "0 2px 0 #fff, 0 0px 8px #bbb",
-            // pointerEvents: "none",
+            pointerEvents: "none",
             textAlign: "center",
             flexDirection: "column",
           }}
@@ -199,7 +138,7 @@ export default function PowerMeterRevised() {
         {/* Text Overlay */}
       </motion.div>
 
-      {isDragging && (
+      {!isDragging && (
         <motion.div
           style={{
             position: "absolute",
@@ -209,7 +148,7 @@ export default function PowerMeterRevised() {
             width: 140,
             height: 140,
             zIndex: 1000,
-            // pointerEvents: "none",
+            pointerEvents: "none",
           }}
           initial={{ scale: minScale }}
           animate={{ scale }}
@@ -217,7 +156,6 @@ export default function PowerMeterRevised() {
         >
           {/* Power Bar Image */}
           <img
-          className="pointer-events-none"
             src="/golfpong/power_bar2.png"
             alt="Power Bar"
             style={{
@@ -230,16 +168,28 @@ export default function PowerMeterRevised() {
           />
           {/* SVG Pointer */}
           <motion.div
-            className="z-[1000]"
             style={{
               position: "absolute",
               left: "50%",
-              transform: `translateX(-50%) rotate(${pointerAngle}deg)`,
+              top: 0,
+              transform: "translateX(-50%)",
               width: 48,
               height: 72,
+              zIndex: 1001,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               pointerEvents: "none",
               transformOrigin: "50% 100%",
             }}
+            // animate={{
+            //   rotate: [-45, 45, -45], 
+            //   transition: {
+            //     repeat: Infinity,
+            //     duration: 2,
+            //     ease: "easeInOut",
+            //   },
+            // }}
           >
             <svg
               viewBox="-1.6 -1.6 19.20 19.20"
@@ -254,30 +204,6 @@ export default function PowerMeterRevised() {
               />
             </svg>
           </motion.div>
-          <div style={{ position: "absolute", top: 0, left: 0, color: "#000" }}>
-            Power: {powerLevel.toFixed(2)}
-          </div>
-
-          <button
-            className="z-[5000] hover:cursor-pointer"
-            style={{
-              position: "absolute",
-              left: "50%",
-              top: 220,
-              transform: "translateX(-50%)",
-              padding: "10px 24px",
-              fontWeight: 700,
-              fontSize: 18,
-              background: "#ff0",
-              border: "2px solid #222",
-              borderRadius: 8,
-              cursor: "pointer",
-            }}
-            onClick={() => setPaused(!paused)}
-            // disabled={paused}
-          >
-            Shoot!
-          </button>
         </motion.div>
       )}
     </div>

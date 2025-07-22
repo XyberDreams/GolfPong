@@ -44,3 +44,21 @@ body,
     transform: rotate(360deg);
   }
 }
+
+
+@keyframes swing-pointer {
+  0% {
+    transform: translateX(-50%) rotate(-50deg);
+  }
+  50% {
+    transform: translateX(-50%) rotate(50deg);
+  }
+  100% {
+    transform: translateX(-50%) rotate(-50deg);
+  }
+}
+
+.swing-pointer {
+  animation: swing-pointer 2s ease-in-out infinite;
+  transform-origin: 50% 100%;
+}

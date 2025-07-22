@@ -31,6 +31,7 @@ export const CurrentStateArray: CurrentState[] = [
 
 export type GolfSwingState = "default" | "noSwing" | "startSwing" | "releaseSwing" | "successSwing" | "missedSwing";
 
+export type ShotType = "default" | "shotShort" | "shotLong" | "shotPerfect";
 // Locked Control State
 export const lockedState = {
   jumpVel: 0,
@@ -99,6 +100,8 @@ export interface ExperienceContextProps {
   //GOLF SPECIFIC LOGIC
   golfSwingState: GolfSwingState;
   setGolfSwingState: React.Dispatch<React.SetStateAction<GolfSwingState>>;
+  shotType?: ShotType;
+  setShotType?: React.Dispatch<React.SetStateAction<ShotType>>;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -121,7 +124,11 @@ export const ExperienceProvider = ({
   const [navigationPOV, setNavigationPOV] = useState(
     "thirdPersonPOV" as NavigationPOV
   );
+
+  //GOLF SPECIFIC LOGIC
   const [golfSwingState, setGolfSwingState] = useState<GolfSwingState>("default");
+  const [shotType, setShotType] = useState<ShotType>("default");
+
 
   //SOUND
   const [bgMusicPlaying, setBGMusicPlaying] = useState<boolean>(false);
@@ -166,6 +173,8 @@ export const ExperienceProvider = ({
         playSFX,
         golfSwingState,
         setGolfSwingState,
+        shotType,
+        setShotType,
       }}
     >
       {children}

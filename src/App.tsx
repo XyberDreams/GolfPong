@@ -54,41 +54,25 @@ function App() {
       ) : (
         <>
           {/* <PowerMeter /> */}
-          {/* <PowerMeterRevised />
-          <SwingMessage /> */}
-          <Canvas>
+          <PowerMeterRevised />
+          <SwingMessage />
+          {/* <Canvas>
             {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
 
             <PCExperience />
             <CameraControls />
             {activeCamera === "presetCamera" && <CameraManager />}
-            {/* {activeCamera === "blenderCamera" && (
+            {activeCamera === "blenderCamera" && (
               <BlenderCamera url="/golfpong/gp_camera" />
-            )} */}
+            )}
             {activeCamera === "animatedCamera" && <Test_Camera />}
             <CameraSwitcher />
             <Environment preset="city" />
-          </Canvas>
+          </Canvas> */}
           
-          {/* <BackButton/>
-          <Portal/> */}
           {/* <BGSoundToggleIcon />
           <SFXButtons /> */}
-          {/* <Canvas>
-            <LoadModel url="diorama" />
-            
-            <Environment preset="city" />
-            <Hotspot position={[0, 3, 0]} duration="1.5s" pulseColor="white" pulseSpread="2px"/>
-            {navigationPOV === "oneShotPOV" && <OneShot/>}
-            {(navigationPOV === "firstPersonPOV" ||
-              navigationPOV === "thirdPersonPOV") && (
-              <Physics debug timeStep="vary">
-                <CharacterController characterURL="/models/hoshi.glb" />
-                <Floor position={[0, 0, 0]} />
-              </Physics>
-            )}
 
-          </Canvas> */}
         </>
       )}
     </>
