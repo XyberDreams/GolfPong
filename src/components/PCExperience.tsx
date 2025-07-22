@@ -1,8 +1,8 @@
 import React from "react";
 import LoadModel from "./LoadModel";
-import GP_Scene from "./GP_Scene";
-import TestDissolve from "./Test_Dissolve";
-import GolfBallTrail from "./GolfBallTrail";
+import GP_Scene from "./GP_Scene.jsx";
+// import TestDissolve from "./Test_Dissolve";
+// import GolfBallTrail from "./GolfBallTrail";
 
 const PCExperience = () => {
   return (
