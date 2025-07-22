@@ -2,7 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
-type ActionMap = Record<string, THREE.AnimationAction | undefined>;
+type ActionMap = Record<string, THREE.AnimationAction | null>;
 type RefMap = React.RefObject<THREE.Group>;
 
 export default function useAnimationHelper(

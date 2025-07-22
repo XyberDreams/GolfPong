@@ -15,5 +15,7 @@ export default function KTX2Support({onReady} : {onReady?: () => void}) {
     }
   }, [gl]);
 
+  window.ktx2loader = 123; // Ensure the global is set
+
   return null;
 }

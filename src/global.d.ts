@@ -16,3 +16,5 @@ declare global {
     ktx2loader?: any;
   }
 }
+
+export {};
