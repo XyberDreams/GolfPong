@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import { KTX2Loader } from "three/examples/jsm/loaders/KTX2Loader";
 
-export default function KTX2Support({onReady}) {
+export default function KTX2Support({onReady} : {onReady?: () => void}) {
   const gl = useThree((state) => state.gl);
 
   useEffect(() => {

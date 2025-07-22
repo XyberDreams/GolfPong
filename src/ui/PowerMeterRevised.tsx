@@ -180,6 +180,7 @@ export default function PowerMeterRevised() {
               alignItems: "center",
               justifyContent: "center",
               pointerEvents: "none",
+              transformOrigin: "50% 100%",
             }}
             animate={{
               rotate: [-45, 45, -45], // swings from -45deg to 45deg and back
@@ -188,9 +189,6 @@ export default function PowerMeterRevised() {
                 duration: 2,
                 ease: "easeInOut",
               },
-            }}
-            style={{
-              transformOrigin: "50% 100%", // center bottom
             }}
           >
             <svg

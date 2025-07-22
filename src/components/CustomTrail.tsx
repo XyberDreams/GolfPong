@@ -70,7 +70,7 @@ export function useTrail(target: Object3D, settings: Partial<Settings>) {
   } as Settings;
 
   // The points array stores the trail's positions as a flat Float32Array
-  const points = React.useRef<Float32Array>(null);
+const points = React.useRef<Float32Array | null>(null);
   const [worldPosition] = React.useState(() => new Vector3());
 
   // When the target or length changes, initialize the points array
