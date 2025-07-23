@@ -3,7 +3,7 @@ import LoadModel from "./LoadModel";
 // @ts-ignore
 import GP_Scene from "./GP_Scene.jsx";
 // @ts-ignore
-import { GP_Scene2 } from "./Gp_scene2.jsx";
+import { GP_Scene2 } from "./Gp_Scene2.jsx";
 // @ts-ignore
 import { GP_Test } from "./GP_Test.jsx";
 // import TestDissolve from "./Test_Dissolve";
