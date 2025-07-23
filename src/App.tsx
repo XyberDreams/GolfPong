@@ -24,9 +24,11 @@ import PowerMeter from "./ui/PowerMeter";
 import SwingMessage from "./ui/SwingMessage";
 import PowerMeterRevised from "./ui/PowerMeterRevised";
 import PowerBarImage from "./ui/PowerBarImage";
-import { GP_Scene2 } from "./components/Gp_scene2.jsx";
+// @ts-ignore
+import { GP_Scene2 } from "./components/Gp_scene2";
 import MobileUIController from "./ui/MobileUIController";
-import { GP_Ball } from "./components/Gp_ball.jsx";
+// @ts-ignore
+import { GP_Ball } from "./components/Gp_ball";
 
 function App() {
   const isMobile = useIsMobile();
