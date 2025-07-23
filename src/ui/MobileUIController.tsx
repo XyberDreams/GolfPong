@@ -13,16 +13,48 @@ export default function MobileUIController() {
     setUiMessage: () => {},
   };
   const { holesHit, holesRemaining, streak, uiMessage } = shotEffects;
-  const { playSFX } = useExperience();
+  const { playSFX, lastShot, totalStrokes, setTotalStrokes } = useExperience();
   const [showMsg, setShowMsg] = useState(false);
 
   //   const remaining = holes.length - holesHit
 
-  const handleShow = () => {
-    setShowMsg(true);
-    setTimeout(() => setShowMsg(false), 1000);
-    playSFX("new_turn");
-  };
+  useEffect(() => {
+    if (lastShot == null) return;
+    playSFX?.("hit");
+    setTotalStrokes((prev) => prev + 1);
+
+    const showTimer = setTimeout(() => {
+      setShowMsg(true);
+
+      let nextStreak = lastShot.hit ? streak + 1 : 0;
+
+      if (nextStreak === 3) {
+        playSFX("swing_success");
+      } else if (nextStreak === 5) {
+        playSFX("swing_success2");
+      } else if (holesHit === 6) {
+        playSFX("swing_success3");
+      } else if (lastShot.hit) {
+        playSFX("new_turn");
+      } else {
+        playSFX("swing_miss");
+      }
+
+      const hideTimer = setTimeout(() => {
+        setShowMsg(false);
+      }, 1000);
+
+      // Clean up hideTimer
+      return () => clearTimeout(hideTimer);
+    }, 1500);
+
+    // Clean up showTimer
+    return () => clearTimeout(showTimer);
+  }, [lastShot]);
+
+  useEffect(() => {
+    console.log("THE LASTTTTTT SHOT IS : ", lastShot);
+  }, [lastShot]);
 
   return (
     <div className="fixed inset-0 z-50 grid grid-cols-10 grid-rows-20  ">
@@ -49,7 +81,7 @@ export default function MobileUIController() {
           </div>
           <div className="bg-white flex items-center px-3 flex-1">
             <span className="text-gray-700 text-base font-semibold">
-              Stroke {holesHit + 1}
+              Stroke {totalStrokes}
             </span>
           </div>
         </div>

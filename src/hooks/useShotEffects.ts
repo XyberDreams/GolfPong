@@ -3,12 +3,15 @@ import useExperience from "../hooks/useExperience";
 import { SHOT_EVENTS, ShotEventKey } from "../config/shotEvents";
 
 export function useShotEffects() {
-  const { holes, lastShot, playSFX } = useExperience();
+  const { holes, lastShot, playSFX, totalStrokes, setTotalStrokes } =
+    useExperience();
   if (!holes) return;
   const holesHit = holes.filter((h) => !h).length;
-    const holesRemaining = holes.length - holesHit;
+  const holesRemaining = holes.length - holesHit;
   const [streak, setStreak] = useState(0);
   const [uiMessage, setUiMessage] = useState("");
+
+
 
   useEffect(() => {
     if (!lastShot) return;
@@ -26,9 +29,12 @@ export function useShotEffects() {
       if (holesHit === holes.length) eventKey = "6Streak";
     }
 
-    setStreak(nextStreak);
+    setStreak((prev) => {
+      const nextStreak = lastShot.hit ? prev + 1 : 0;
+      return nextStreak;
+    });
     setUiMessage(SHOT_EVENTS[eventKey].message);
-    playSFX?.(SHOT_EVENTS[eventKey].sfx);
+    // playSFX?.("hit");
   }, [lastShot]);
 
   useEffect(() => {
@@ -49,6 +55,14 @@ export function useShotEffects() {
       uiMessage
     );
   }, [holesHit]);
+
+  useEffect(() => {
+    console.log(
+      "%c🔥 STROKES TOTALLL (effect):",
+      "color: #ff9100; font-weight: bold;",
+      totalStrokes
+    );
+  }, [totalStrokes]);
 
   return {
     holesHit,

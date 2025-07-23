@@ -122,7 +122,9 @@ export interface ExperienceContextProps {
   golfAnimationToPlay?: string;
   setGolfAnimationToPlay?: React.Dispatch<React.SetStateAction<string>>;
   lastShot: ShotResult | null;
-  setLastShot: (shot: ShotResult) => void;
+  setLastShot: (shot: ShotResult | null ) => void;
+  totalStrokes: number;
+  setTotalStrokes: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -155,6 +157,7 @@ export const ExperienceProvider = ({
   const [golfAnimationToPlay, setGolfAnimationToPlay] =
     useState<string>("default");
   const [lastShot, setLastShot] = useState<ShotResult | null>(null);
+  const [totalStrokes, setTotalStrokes] = useState(1);
 
   //SOUND
   const [bgMusicPlaying, setBGMusicPlaying] = useState<boolean>(false);
@@ -209,6 +212,8 @@ export const ExperienceProvider = ({
         setGolfAnimationToPlay,
         lastShot,
         setLastShot,
+        totalStrokes,
+        setTotalStrokes,
       }}
     >
       {children}

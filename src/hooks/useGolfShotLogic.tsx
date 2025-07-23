@@ -41,7 +41,6 @@ export function useGolfShotLogic() {
       // Missed shot
       playSFX?.("swing2");
       console.log("Missed shot! No available holes in this direction.");
-
       return { hit: false, holeIdx: null };
     }
   }

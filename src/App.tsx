@@ -62,7 +62,7 @@ function App() {
       ) : (
         <>
           {/* <PowerMeter /> */}
-          <PowerMeterRevised onShot={() => setTimeout(handleShow, 1500)}/>
+          <PowerMeterRevised />
           {/* <SwingMessage /> */}
           <Canvas>
             {/* {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />} */}

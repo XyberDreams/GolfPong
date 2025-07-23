@@ -8,7 +8,7 @@ import { useShotEffects } from "../hooks/useShotEffects";
 // Replace with your actual PNG path
 const BALL_IMG = "/golfpong/golfball7.png";
 
-export default function PowerMeterRevised() {
+export default function PowerMeterRevised({ onShot }) {
   const [dragY, setDragY] = useState(0);
   const [dragX, setDragX] = useState(0);
   const [x, setX] = useState(0);
@@ -92,10 +92,16 @@ export default function PowerMeterRevised() {
     return "default";
   }
 
-  function getShotDirection(x: number): "left" | "center" | "right" {
-    if (x < -40) return "right";
-    if (x > 40) return "left";
-    return "center";
+  function getShotDirection(x: number) {
+    if (x < -40) {
+      if (setShotDirection) setShotDirection("right");
+    } // Dragged left, shoot right
+    if (x > 40) {
+      if (setShotDirection) setShotDirection("left");
+    } // Dragged right, shoot left
+    if (x >= -40 && x <= 40) {
+      if (setShotDirection) setShotDirection("center");
+    } // Dragged center, shoot straight
   }
 
   // useEffect(() => {
@@ -117,38 +123,35 @@ export default function PowerMeterRevised() {
 
   const triggerShot = () => {
     setPaused(true);
-    setBallVisible(false);
-
-    // Function that returns shotLong, shotShort, or shotPerfect
+    setBallVisible(false); 
     const shotType = getShotType(powerLevel);
-    // Function that returns left, center, or right
-    const direction = getShotDirection(dragX);
+    // if (setShotType) setShotType(shotRef);
+
+    let direction: "left" | "center" | "right";
+    if (dragX < -40) direction = "right";
+    else if (dragX > 40) direction = "left";
+    else direction = "center";
 
     let result = null;
-    // Result will return {hit: true, holeIdx: number} ; where the number is your last hole it hit if true, and false null if miss
     if (shotType === "shotPerfect") {
       result = handleShot(direction);
-      console.log("THIS IS RESULT: ", result);
       setLastShot?.(result);
     } else {
-      result = { hit: false, holeIdx: null };
-      console.log("THIS IS RESULT OF MISS: ", result);
+      result = { hit: false, holeIdx: getNextAvailableHoleIdx(direction) };
       setLastShot?.(result);
     }
 
-    //Returns the shot e.g., shotPerfect1, shotShort1, shotLong3 etc
     const animationName = getAnimationName({
       direction,
       shotType,
-      holeIdx: result?.holeIdx,
+      holeIdx: result?.holeIdx ?? null,
     });
 
     if (setGolfAnimationToPlay) {
       setGolfAnimationToPlay(animationName ?? "");
     }
-    
+    if (onShot) onShot(); // Notify parent after shot
 
-    // Reset for next shot
     setTimeout(() => {
       setPaused(false);
       setBallVisible(true); // Show the ball again
@@ -158,6 +161,34 @@ export default function PowerMeterRevised() {
     }, 4000); // Reset after 1 second
   };
 
+  // function onPointerDown(e: PointerEvent) {
+  //   setIsDragging(true);
+  //   startYRef.current = e.clientY;
+  //   window.addEventListener("pointermove", onPointerMove);
+  //   window.addEventListener("pointerup", onPointerUp);
+  // }
+
+  // function onPointerMove(e: PointerEvent) {
+  //   if (startYRef.current === null) return;
+
+  //   const deltaY = e.clientY - startYRef.current;
+  //   if (deltaY < 0) {
+  //     console.log("Pulling back");
+  //     setDragY(0);
+  //   } else {
+  //     setDragY(Math.min(deltaY, 500));
+  //     console.log("Dragging down:", deltaY);
+  //   }
+  // }
+
+  // function onPointerUp(e: PointerEvent) {
+  //   setIsDragging(false);
+  //   startYRef.current = null;
+  //   window.removeEventListener("pointermove", onPointerMove);
+  //   window.removeEventListener("pointerup", onPointerUp);
+
+  //   console.log("Released with dragY:", dragY);
+  // }
 
   return (
     <div>
@@ -183,9 +214,32 @@ export default function PowerMeterRevised() {
           else if (info.offset.x > 40) direction = "left";
           else direction = "center";
           setShotDirection?.(direction);
+          
         }}
         onDragEnd={() => {
           triggerShot();
+          // Determine direction from dragX
+          let direction: "left" | "center" | "right";
+          if (dragX < -40) {
+            direction = "right";
+            setShotDirection?.("right");
+          } else if (dragX > 40) {
+            direction = "left";
+            setShotDirection?.("left");
+          } else {
+            direction = "center";
+            setShotDirection?.("center");
+          }
+
+          // Function that returns shotLong, shotShort, or shotPerfect
+          const currentShotType = getShotType(powerLevel);
+
+          if (currentShotType === "shotPerfect") {
+            const result = handleShot(direction);
+            console.log("Shot result:", result);
+          } else {
+            console.log("Shot type not perfect, no shot taken");
+          }
         }}
         // animate={{ x: offset.x, y: offset.y }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}

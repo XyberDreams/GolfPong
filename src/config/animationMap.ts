@@ -1,6 +1,13 @@
 type ShotType = "default" | "shotPerfect" | "shotShort" | "shotLong";
 type Direction = "left" | "center" | "right";
 
+function directionToIdx(direction: Direction): number {
+  if (direction === "left") return 1;
+  if (direction === "center") return 2;
+  if (direction === "right") return 3;
+  return 1; // fallback
+}
+
 export function getAnimationName({
   direction,
   shotType,
@@ -12,14 +19,14 @@ export function getAnimationName({
 }) {
   if (shotType === "shotPerfect" && holeIdx !== null) {
     // e.g. "hitHole1", "hitHole2", ...
-    return `shotperfect${holeIdx + 1}`;
+    return `shotPerfect${holeIdx + 1}`;
   }
-  if (shotType === "shotShort" && direction && holeIdx !== null) {
+  if (shotType === "shotShort" && direction) {
     // e.g. "missShortLeft1", "missShortCenter3", etc.
-    return `missShort_${direction}_${holeIdx + 1}`;
+    return `shotShort${directionToIdx(direction)}`;
   }
-  if (shotType === "shotLong" && direction && holeIdx !== null) {
-    return `missLong_${direction}_${holeIdx + 1}`;
+  if (shotType === "shotLong" && direction) {
+     return `shotLong${directionToIdx(direction)}`;
   }
   return null;
 }

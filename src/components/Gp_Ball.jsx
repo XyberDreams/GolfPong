@@ -48,21 +48,13 @@ export function GP_Ball(props) {
   }, [animations]);
 
   return (
-    <group ref={group} {...props} dispose={null}>
-      <group name="Scene">
-        <group name="ball" position={[-0.002, -2.282, -0.003]}>
-          <mesh
-            name="Cube050"
-            geometry={nodes.Cube050.geometry}
-            material={materials["Material.012"]}
-          />
-          <mesh
-            name="Cube050_1"
-            geometry={nodes.Cube050_1.geometry}
-            material={materials["Material.011"]}
-          />
-        </group>
-      </group>
-    </group>
+       <group ref={group} {...props} dispose={null}>
+         <group name="Scene">
+           <group name="ball" position={[-0.002, -2.28, -0.004]} rotation={[-0.007, 0, 0]}>
+             <mesh name="Cube050" geometry={nodes.Cube050.geometry} material={materials['Material.012']} />
+             <mesh name="Cube050_1" geometry={nodes.Cube050_1.geometry} material={materials['Material.011']} />
+           </group>
+         </group>
+       </group>
   );
 }
