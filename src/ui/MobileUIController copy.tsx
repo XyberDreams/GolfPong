@@ -24,11 +24,11 @@ export default function MobileUIController() {
         <span className="text-sm font-medium">Remaining</span>
       </div> */}
       <div
-        className="absolute top-2 left-2 h-14 flex items-center overflow-hidden"
+        className="absolute top-2 left-2 flex items-center rounded-xl shadow-lg overflow-hidden"
         style={{ minWidth: 140 }}
       >
         {/* Icon Section */}
-        <div className="bg-[#2176ff] px-2 py-2 flex items-center h-full">
+        <div className="bg-[#2176ff] px-2 py-2 flex items-center">
           <img
             src="/golfpong/golfball7.png"
             alt="User"
@@ -36,22 +36,21 @@ export default function MobileUIController() {
           />
         </div>
         {/* Info Section */}
-        <div className="flex flex-col h-full">
-          <div className="bg-[#2176ff] flex items-center px-3 flex-1">
-            <span className="text-white font-semibold text-base">User</span>
-          </div>
-          <div className="bg-white flex items-center px-3 flex-1">
-            <span className="text-gray-700 text-base font-semibold">
-              Stroke {holesHit + 1}
-            </span>
-          </div>
+        <div className="bg-white px-3 py-1 flex flex-col justify-center">
+          <span className="text-[#2176ff] font-semibold text-sm leading-tight">
+            User
+          </span>
+          <span className="text-gray-700 text-xs leading-tight">
+            Stroke {holesHit + 1}
+          </span>
         </div>
         {/* Points Section */}
-        <div className="bg-[#2c2d41] px-4 py-1 flex flex-col items-center justify-center h-full">
+        <div className="bg-[#2563eb] px-3 py-1 flex flex-col items-center justify-center rounded-r-xl">
           <span className="text-white text-lg font-bold">{holesRemaining}</span>
           <span className="text-[#ff9800] text-xs font-bold -mt-1">pt</span>
         </div>
       </div>
+      
 
       <div className=" items-end justify-items-end rounded-lg  font-semibold text-base text-gray-700 pointer-events-auto col-start-9 col-end-11 row-span-2">
         <svg
@@ -97,7 +96,7 @@ export default function MobileUIController() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: 50 }}
             transition={{ duration: 0.5 }}
-            className="row-start-3 row-end-5 col-span-11 text-[#ffdf00] flex justify-center items-center text-5xl font-bold"
+            className="row-start-3 row-end-5 col-span-11 text-[#ffdf00] flex justify-center items-center text-4xl font-bold"
           >
             {uiMessage}
           </motion.div>
