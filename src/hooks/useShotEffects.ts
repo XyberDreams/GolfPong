@@ -6,6 +6,7 @@ export function useShotEffects() {
   const { holes, lastShot, playSFX } = useExperience();
   if (!holes) return;
   const holesHit = holes.filter((h) => !h).length;
+    const holesRemaining = holes.length - holesHit;
   const [streak, setStreak] = useState(0);
   const [uiMessage, setUiMessage] = useState("");
 
@@ -54,5 +55,6 @@ export function useShotEffects() {
     streak,
     uiMessage,
     setUiMessage,
+    holesRemaining,
   };
 }

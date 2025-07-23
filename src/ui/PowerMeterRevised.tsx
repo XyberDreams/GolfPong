@@ -8,7 +8,7 @@ import { useShotEffects } from "../hooks/useShotEffects";
 // Replace with your actual PNG path
 const BALL_IMG = "/golfpong/golfball7.png";
 
-export default function PowerMeterRevised() {
+export default function PowerMeterRevised({ onShot }) {
   const [dragY, setDragY] = useState(0);
   const [dragX, setDragX] = useState(0);
   const [x, setX] = useState(0);
@@ -36,9 +36,9 @@ export default function PowerMeterRevised() {
   const { holesHit, streak, uiMessage } = useShotEffects();
 
   // Clamp dragY between 0 and 500, then map to scale between 0.5 and 1.2
-  const minScale = 0.2;
-  const maxScale = 1;
-  const maxDrag = 300;
+  const minScale = 0.3;
+  const maxScale = 1.2;
+  const maxDrag = 100;
   const scale =
     minScale + (Math.min(dragY, maxDrag) / maxDrag) * (maxScale - minScale);
 
@@ -138,6 +138,15 @@ export default function PowerMeterRevised() {
     if (setGolfAnimationToPlay) {
       setGolfAnimationToPlay(animationName ?? "");
     }
+    if (onShot) onShot(); // Notify parent after shot
+
+    setTimeout(() => {
+      setPaused(false);
+      setBallVisible(true); // Show the ball again
+      setIsDragging(false); // Hide the power bar overlay
+      // playSFX("new_turn");
+      setShotDirection?.("default");
+    }, 4000); // Reset after 1 second
   };
 
   // function onPointerDown(e: PointerEvent) {
@@ -170,7 +179,7 @@ export default function PowerMeterRevised() {
   // }
 
   return (
-    <div >
+    <div>
       <motion.div
         className="z-[500] flex flex-col items-center justify-center"
         style={{
@@ -184,7 +193,7 @@ export default function PowerMeterRevised() {
         onDragStart={() => setIsDragging(true)}
         onDrag={(event, info) => {
           setOffset({ x: info.offset.x, y: info.offset.y });
-          setDragY(info.offset.y);
+          setDragY(Math.max(info.offset.y, 0));
           setDragX(info.offset.x);
 
           // Calculate direction and update context/state
@@ -234,16 +243,11 @@ export default function PowerMeterRevised() {
                 height: 90,
                 zIndex: 500,
                 // position: "absolute",
-
               }}
             />
 
             {!isDragging && (
-              <svg
-                width={140}
-                height={140}
-                className="z-[500] absolute"
-              >
+              <svg width={140} height={140} className="z-[500] absolute">
                 <circle
                   cx={70}
                   cy={70}
@@ -261,12 +265,11 @@ export default function PowerMeterRevised() {
             )}
           </>
         )}
-
       </motion.div>
 
       {isDragging && (
         <motion.div
-        className="top-0 absolute"
+          className="top-[-10%] absolute"
           style={{
             width: 140,
             height: 140,
@@ -316,11 +319,8 @@ export default function PowerMeterRevised() {
               />
             </svg>
           </motion.div>
-          <div style={{ position: "absolute", top: 0, left: 0, color: "#000" }}>
-            Power: {powerLevel.toFixed(2)}
-          </div>
 
-          <button
+          {/* <button
             className="z-[5000] hover:cursor-pointer"
             style={{
               position: "absolute",
@@ -344,8 +344,8 @@ export default function PowerMeterRevised() {
             }}
           >
             Reset!
-          </button>
-          <button
+          </button> */}
+          {/* <button
             style={{
               position: "absolute",
               left: "50%",
@@ -367,8 +367,8 @@ export default function PowerMeterRevised() {
             }}
           >
             Random Shot
-          </button>
-          <button
+          </button> */}
+          {/* <button
             style={{
               position: "absolute",
               left: "50%",
@@ -388,7 +388,7 @@ export default function PowerMeterRevised() {
             }}
           >
             Reset Holes
-          </button>
+          </button> */}
         </motion.div>
       )}
     </div>

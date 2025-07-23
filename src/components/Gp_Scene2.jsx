@@ -115,10 +115,10 @@ export function GP_Scene2(props) {
           <mesh name="Cylinder055_1" geometry={nodes.Cylinder055_1.geometry} material={nodes.Cylinder055_1.material} />
         </group>
         <mesh name="Cylinder045" geometry={nodes.Cylinder045.geometry} material={materials['Material.008']} position={[-0.008, -2.332, -6.717]} rotation={[-Math.PI / 2, 0, -Math.PI / 2]} scale={0.015} />
-        <group name="ball1" position={[0, -2.273, 0]} rotation={[0, -1.556, 0]} scale={0.038}>
+        {/* <group name="ball1" position={[0, -2.273, 0]} rotation={[0, -1.556, 0]} scale={0.038}>
           <mesh name="Cube011" geometry={nodes.Cube011.geometry} material={materials.Material} />
           <mesh name="Cube011_1" geometry={nodes.Cube011_1.geometry} material={materials['Material.001']} />
-        </group>
+        </group> */}
         <group name="ball3" position={[0, -2.273, 0]} rotation={[0, -1.556, 0]} scale={0.038}>
           <mesh name="Cube002" geometry={nodes.Cube002.geometry} material={materials.Material} />
           <mesh name="Cube002_1" geometry={nodes.Cube002_1.geometry} material={materials['Material.001']} />

@@ -30,6 +30,7 @@ import PowerMeterRevised from "./ui/PowerMeterRevised";
 import PowerBarImage from "./ui/PowerBarImage";
 import { GP_Scene2 } from "./components/Gp_scene2";
 import MobileUIController from "./ui/MobileUIController";
+import { GP_Ball } from "./components/Gp_ball";
 
 function App() {
   const isMobile = useIsMobile();
@@ -43,15 +44,19 @@ function App() {
           {/* <PowerMeterRevised />
           <SwingMessage /> */}
           <MobileUIController/>
+          
 
           {/* <PowerBarImage /> */}
 
           {/* <SwingMessage /> */}
-          {/* <Canvas>
+          <Canvas>
+                        {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
+
                <CameraControls />
-               <GP_Scene2 />    
+               <GP_Ball />
+               <GP_Scene2 />
          <Environment preset="city" />
-          </Canvas> */}
+          </Canvas>
         </>
       ) : (
         <>

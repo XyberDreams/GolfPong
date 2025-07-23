@@ -12,7 +12,7 @@ export function getAnimationName({
 }) {
   if (shotType === "shotPerfect" && holeIdx !== null) {
     // e.g. "hitHole1", "hitHole2", ...
-    return `hitHole${holeIdx + 1}`;
+    return `shotperfect${holeIdx + 1}`;
   }
   if (shotType === "shotShort" && direction && holeIdx !== null) {
     // e.g. "missShortLeft1", "missShortCenter3", etc.
