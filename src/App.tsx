@@ -29,6 +29,7 @@ import SwingMessage from "./ui/SwingMessage";
 import PowerMeterRevised from "./ui/PowerMeterRevised";
 import PowerBarImage from "./ui/PowerBarImage";
 import { GP_Scene2 } from "./components/Gp_scene2";
+import MobileUIController from "./ui/MobileUIController";
 
 function App() {
   const isMobile = useIsMobile();
@@ -39,22 +40,17 @@ function App() {
     <>
       {isMobile ? (
         <>
-          <PowerMeterRevised />
-          <SwingMessage />
-          <GP_Scene2 />
+          {/* <PowerMeterRevised />
+          <SwingMessage /> */}
+          <MobileUIController/>
 
           {/* <PowerBarImage /> */}
 
           {/* <SwingMessage /> */}
           {/* <Canvas>
-            {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
-
-            <PCExperience />
-            {activeCamera === "blenderCamera" && (
-              <BlenderCamera url="/golfpong/gp_camera" />
-            )}
-            <CameraSwitcher />
-            <Environment preset="city" />
+               <CameraControls />
+               <GP_Scene2 />    
+         <Environment preset="city" />
           </Canvas> */}
         </>
       ) : (
@@ -64,9 +60,9 @@ function App() {
           {/* <SwingMessage /> */}
           <Canvas>
             {/* {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />} */}
-            <GP_Scene2 />
+            {/* <GP_Scene2 /> */}
 
-            {/* <PCExperience /> */}
+            <PCExperience />
             <CameraControls />
             {/* {activeCamera === "presetCamera" && <CameraManager />}
             {activeCamera === "blenderCamera" && (

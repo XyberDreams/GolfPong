@@ -11,7 +11,14 @@ export function GP_Scene2(props) {
   const group = React.useRef()
   const { nodes, materials, animations } = useGLTF('/golfpong/gp_scene2.glb')
   const { actions } = useAnimations(animations, group)
-  const { holes } = useExperience()
+  const { holes, shotDirection } = useExperience()
+
+  const holePriority = {
+  left: [0, 3],
+  center: [1, 3, 4, 5],
+  right: [2, 4],
+};
+
   return (
      <group ref={group} {...props} dispose={null}>
       <group name="Scene">
@@ -44,37 +51,61 @@ export function GP_Scene2(props) {
           {holes[5] && (
           <group name="ring1" position={[0, 0.009, 0.358]} scale={[0.243, 0.201, 0.243]}>
             <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry} material={materials['Material.003']} />
-            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={materials['Material.005']} />
+            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={
+        holePriority[shotDirection]?.includes(5)
+          ? materials['a.grass.001']
+          : materials['Material.005']
+      } />
           </group>
           )}
           {holes[3] && (
           <group name="ring2" position={[-0.202, 0.009, 0.008]} scale={[0.243, 0.201, 0.243]}>
             <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry} material={materials['Material.003']} />
-            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={materials['Material.005']} />
+            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={
+        holePriority[shotDirection]?.includes(3)
+          ? materials['a.grass.001']
+          : materials['Material.005']
+      } />
           </group>
           )}
           {holes[4] && (
           <group name="ring3" position={[0.201, 0.009, 0.008]} scale={[0.243, 0.201, 0.243]}>
             <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry} material={materials['Material.003']} />
-            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={materials['Material.005']} />
+            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={
+        holePriority[shotDirection]?.includes(4)
+          ? materials['a.grass.001']
+          : materials['Material.005']
+      } />
           </group>
           )}
           {holes[0] && (
           <group name="ring4" position={[-0.403, 0.009, -0.34]} scale={[0.243, 0.201, 0.243]}>
             <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry} material={materials['Material.003']} />
-            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={materials['Material.005']} />
+            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={
+        holePriority[shotDirection]?.includes(0)
+          ? materials['a.grass.001']
+          : materials['Material.005']
+      } />
           </group>
           )}
           {holes[1] && (
           <group name="ring5" position={[0.001, 0.009, -0.34]} scale={[0.243, 0.201, 0.243]}>
             <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry} material={materials['Material.003']} />
-            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={materials['Material.005']} />
+            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={
+        holePriority[shotDirection]?.includes(1)
+          ? materials['a.grass.001']
+          : materials['Material.005']
+      } />
           </group>
           )}
           {holes[2] && (
           <group name="ring6" position={[0.403, 0.009, -0.34]} scale={[0.243, 0.201, 0.243]}>
             <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry} material={materials['Material.003']} />
-            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={materials['Material.005']} />
+            <mesh name="Cylinder052_1" geometry={nodes.Cylinder052_1.geometry} material={
+        holePriority[shotDirection]?.includes(2)
+          ? materials['a.grass.001']
+          : materials['Material.005']
+      } />
           </group>
           )}
         </group>

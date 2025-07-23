@@ -29,7 +29,13 @@ export const CurrentStateArray: CurrentState[] = [
   "main",
 ];
 
-export type GolfSwingState = "default" | "noSwing" | "startSwing" | "releaseSwing" | "successSwing" | "missedSwing";
+export type GolfSwingState =
+  | "default"
+  | "noSwing"
+  | "startSwing"
+  | "releaseSwing"
+  | "successSwing"
+  | "missedSwing";
 
 export type ShotType = "default" | "shotShort" | "shotLong" | "shotPerfect";
 // Locked Control State
@@ -40,6 +46,11 @@ export const lockedState = {
 };
 
 export type ShotDirection = "default" | "left" | "right" | "center";
+
+export type ShotResult = {
+  hit: boolean;
+  holeIdx: number | null;
+};
 
 // Standard State
 export const ecctrlDistance = () => {
@@ -108,6 +119,10 @@ export interface ExperienceContextProps {
   setShotDirection?: React.Dispatch<React.SetStateAction<ShotDirection>>;
   holes?: boolean[];
   setHoles?: React.Dispatch<React.SetStateAction<boolean[]>>;
+  golfAnimationToPlay?: string;
+  setGolfAnimationToPlay?: React.Dispatch<React.SetStateAction<string>>;
+  lastShot: ShotResult | null;
+  setLastShot: (shot: ShotResult) => void;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -132,11 +147,14 @@ export const ExperienceProvider = ({
   );
 
   //GOLF SPECIFIC LOGIC
-  const [golfSwingState, setGolfSwingState] = useState<GolfSwingState>("default");
+  const [golfSwingState, setGolfSwingState] =
+    useState<GolfSwingState>("default");
   const [shotType, setShotType] = useState<ShotType>("default");
   const [shotDirection, setShotDirection] = useState<ShotDirection>("default");
   const [holes, setHoles] = useState([true, true, true, true, true, true]);
-
+  const [golfAnimationToPlay, setGolfAnimationToPlay] =
+    useState<string>("default");
+  const [lastShot, setLastShot] = useState<ShotResult | null>(null);
 
   //SOUND
   const [bgMusicPlaying, setBGMusicPlaying] = useState<boolean>(false);
@@ -187,6 +205,10 @@ export const ExperienceProvider = ({
         setShotDirection,
         holes,
         setHoles,
+        golfAnimationToPlay,
+        setGolfAnimationToPlay,
+        lastShot,
+        setLastShot,
       }}
     >
       {children}

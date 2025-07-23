@@ -35,7 +35,7 @@ export function useGolfShotLogic() {
       });
 
       // Optionally play a sound or trigger animation
-      playSFX?.("hit");
+    //   playSFX?.("hit");
       return { hit: true, holeIdx: availableIdx };
     } else {
       // Missed shot

@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import useExperience from "../hooks/useExperience";
 import useGolfShotLogic from "../hooks/useGolfShotLogic";
+import { getAnimationName } from "../config/animationMap";
+import { useShotEffects } from "../hooks/useShotEffects";
 
 // Replace with your actual PNG path
 const BALL_IMG = "/golfpong/golfball7.png";
@@ -19,9 +21,19 @@ export default function PowerMeterRevised() {
   const [isShot, setIsShot] = useState("default");
   const [pointerAngle, setPointerAngle] = useState(0);
   const [paused, setPaused] = useState(true);
-  const { shotType, setShotType, shotDirection, setShotDirection, setHoles, playSFX } =
-    useExperience();
+  const {
+    shotType,
+    setShotType,
+    shotDirection,
+    setShotDirection,
+    setHoles,
+    playSFX,
+    golfAnimationToPlay,
+    setGolfAnimationToPlay,
+    setLastShot,
+  } = useExperience();
   const { handleShot } = useGolfShotLogic();
+  const { holesHit, streak, uiMessage } = useShotEffects();
 
   // Clamp dragY between 0 and 500, then map to scale between 0.5 and 1.2
   const minScale = 0.2;
@@ -86,10 +98,10 @@ export default function PowerMeterRevised() {
     } // Dragged center, shoot straight
   }
 
-  useEffect(() => {
-    console.log("shot direction: ", shotDirection);
-    console.log("Shot Type:", shotType);
-  }, [shotDirection]);
+  // useEffect(() => {
+  //   console.log("shot direction: ", shotDirection);
+  //   console.log("Shot Type:", shotType);
+  // }, [shotDirection]);
 
   // useEffect(() => {
   //   console.log(" Drag X: ", dragX);
@@ -105,15 +117,28 @@ export default function PowerMeterRevised() {
 
   const triggerShot = () => {
     setPaused(true);
-    // setIsDragging(false);
-  };
+    const shotType = getShotType(powerLevel);
+    // if (setShotType) setShotType(shotRef);
 
-  useEffect(() => {
-    if (paused) {
-      const shotRef = getShotType(powerLevel);
-      if (setShotType) setShotType(shotRef);
+    let direction: "left" | "center" | "right";
+    if (dragX < -40) direction = "right";
+    else if (dragX > 40) direction = "left";
+    else direction = "center";
+
+    const result = handleShot(direction);
+
+    setLastShot?.(result);
+
+    const animationName = getAnimationName({
+      direction,
+      shotType,
+      holeIdx: result.holeIdx,
+    });
+
+    if (setGolfAnimationToPlay) {
+      setGolfAnimationToPlay(animationName ?? "");
     }
-  }, [paused]);
+  };
 
   // function onPointerDown(e: PointerEvent) {
   //   setIsDragging(true);
@@ -145,15 +170,12 @@ export default function PowerMeterRevised() {
   // }
 
   return (
-    <div style={{ position: "absolute", width: "100vw", height: "100vh" }}>
+    <div >
       <motion.div
-        className="absolute z-[500] flex flex-col items-center justify-center"
+        className="z-[500] flex flex-col items-center justify-center"
         style={{
           width: 140,
           height: 140,
-          left: "50%",
-          top: 50,
-          transform: "translateX(-50%)",
         }}
         drag
         dragSnapToOrigin={true}
@@ -164,6 +186,13 @@ export default function PowerMeterRevised() {
           setOffset({ x: info.offset.x, y: info.offset.y });
           setDragY(info.offset.y);
           setDragX(info.offset.x);
+
+          // Calculate direction and update context/state
+          let direction: "left" | "center" | "right";
+          if (info.offset.x < -40) direction = "right";
+          else if (info.offset.x > 40) direction = "left";
+          else direction = "center";
+          setShotDirection?.(direction);
         }}
         onDragEnd={() => {
           triggerShot();
@@ -204,39 +233,16 @@ export default function PowerMeterRevised() {
                 width: 90,
                 height: 90,
                 zIndex: 500,
-                position: "absolute",
-                left: 25,
-                top: 25,
+                // position: "absolute",
+
               }}
             />
-
-            <div
-              className="font-[800] text-xl"
-              style={{
-                position: "absolute",
-                left: 25,
-                top: 25,
-                width: 90,
-                height: 90,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                zIndex: 4,
-                color: "#222",
-
-                textAlign: "center",
-                flexDirection: "column",
-              }}
-            >
-              <span>PULL</span>
-              <span>BACK</span>
-            </div>
 
             {!isDragging && (
               <svg
                 width={140}
                 height={140}
-                style={{ position: "absolute", left: 0, top: 0, zIndex: 3 }}
+                className="z-[500] absolute"
               >
                 <circle
                   cx={70}
@@ -256,16 +262,12 @@ export default function PowerMeterRevised() {
           </>
         )}
 
-        {/* Text Overlay */}
       </motion.div>
 
       {isDragging && (
         <motion.div
+        className="top-0 absolute"
           style={{
-            position: "absolute",
-            left: "50%",
-            top: 50,
-            transform: "translateX(-50%)",
             width: 140,
             height: 140,
             zIndex: 1000,
@@ -337,7 +339,8 @@ export default function PowerMeterRevised() {
               setPaused(false);
               setBallVisible(true); // Show the ball again
               setIsDragging(false); // Hide the power bar overlay
-              playSFX("new_turn")
+              playSFX("new_turn");
+              setShotDirection?.("default");
             }}
           >
             Reset!
@@ -365,7 +368,7 @@ export default function PowerMeterRevised() {
           >
             Random Shot
           </button>
-                    <button
+          <button
             style={{
               position: "absolute",
               left: "50%",
