@@ -5,7 +5,15 @@ import { useEffect, useState } from "react";
 import { useExperience } from "../hooks/useExperience";
 
 export default function MobileUIController() {
-  const { holesHit, holesRemaining, streak, uiMessage } = useShotEffects();
+  const shotEffects = useShotEffects() || {
+    holesHit: 0,
+    holesRemaining: 6,
+    streak: 0,
+    uiMessage: "",
+    setUiMessage: () => {},
+  };
+  const { holesHit, holesRemaining, streak, uiMessage } = shotEffects;
+
   const { playSFX } = useExperience();
   const [showMsg, setShowMsg] = useState(false);
 
@@ -50,7 +58,6 @@ export default function MobileUIController() {
           <span className="text-[#ff9800] text-xs font-bold -mt-1">pt</span>
         </div>
       </div>
-      
 
       <div className=" items-end justify-items-end rounded-lg  font-semibold text-base text-gray-700 pointer-events-auto col-start-9 col-end-11 row-span-2">
         <svg

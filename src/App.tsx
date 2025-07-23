@@ -18,24 +18,23 @@ import {
   Environment,
   PerspectiveCamera,
 } from "@react-three/drei";
-import OneShot from "./components/navigation/OneShot";
-import Hotspot from "./components/Hotspot";
-import BGSoundToggleIcon from "./sound/BGSoundToggleIcon";
-import SFXButtons from "./sound/SFXButton";
 import KTX2Support from "./components/KTX2Support";
 import PCExperience from "./components/PCExperience";
 import PowerMeter from "./ui/PowerMeter";
 import SwingMessage from "./ui/SwingMessage";
 import PowerMeterRevised from "./ui/PowerMeterRevised";
 import PowerBarImage from "./ui/PowerBarImage";
-import { GP_Scene2 } from "./components/Gp_scene2";
+import { GP_Scene2 } from "./components/Gp_scene2.jsx";
 import MobileUIController from "./ui/MobileUIController";
-import { GP_Ball } from "./components/Gp_ball";
+import { GP_Ball } from "./components/Gp_ball.jsx";
 
 function App() {
   const isMobile = useIsMobile();
   const { activeCamera, navigationPOV } = useExperience();
   const [ktxReady, setKtxReady] = useState(false);
+
+  const handleShow = () => {
+  }
 
   return (
     <>
@@ -61,7 +60,7 @@ function App() {
       ) : (
         <>
           {/* <PowerMeter /> */}
-          <PowerMeterRevised />
+          <PowerMeterRevised onShot={() => setTimeout(handleShow, 1500)}/>
           {/* <SwingMessage /> */}
           <Canvas>
             {/* {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />} */}

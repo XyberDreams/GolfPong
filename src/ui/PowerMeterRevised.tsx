@@ -33,7 +33,13 @@ export default function PowerMeterRevised({ onShot }) {
     setLastShot,
   } = useExperience();
   const { handleShot } = useGolfShotLogic();
-  const { holesHit, streak, uiMessage } = useShotEffects();
+
+  const shotEffects = useShotEffects() || {
+    holesHit: 0,
+    streak: 0,
+    uiMessage: "",
+  }
+  const { holesHit, streak, uiMessage } = shotEffects;
 
   // Clamp dragY between 0 and 500, then map to scale between 0.5 and 1.2
   const minScale = 0.3;

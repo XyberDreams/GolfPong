@@ -5,7 +5,14 @@ import { useEffect, useState } from "react";
 import { useExperience } from "../hooks/useExperience";
 
 export default function MobileUIController() {
-  const { holesHit, holesRemaining, streak, uiMessage } = useShotEffects();
+  const shotEffects = useShotEffects() || {
+    holesHit: 0,
+    holesRemaining: 6,
+    streak: 0,
+    uiMessage: "",
+    setUiMessage: () => {},
+  };
+  const { holesHit, holesRemaining, streak, uiMessage } = shotEffects;
   const { playSFX } = useExperience();
   const [showMsg, setShowMsg] = useState(false);
 
