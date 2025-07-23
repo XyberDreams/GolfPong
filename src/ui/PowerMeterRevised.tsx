@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
-import useExperience from "../hooks/useExperience";
+import useExperience, { ShotResult } from "../hooks/useExperience";
 import useGolfShotLogic from "../hooks/useGolfShotLogic";
 import { getAnimationName } from "../config/animationMap";
 import { useShotEffects } from "../hooks/useShotEffects";
@@ -124,7 +124,7 @@ export default function PowerMeterRevised() {
     // Function that returns left, center, or right
     const direction = getShotDirection(dragX);
 
-    let result = null;
+    let result: ShotResult | null = null;
     // Result will return {hit: true, holeIdx: number} ; where the number is your last hole it hit if true, and false null if miss
     if (shotType === "shotPerfect") {
       result = handleShot(direction);
@@ -140,13 +140,12 @@ export default function PowerMeterRevised() {
     const animationName = getAnimationName({
       direction,
       shotType,
-      holeIdx: result?.holeIdx,
+      holeIdx: result ? result.holeIdx : null,
     });
 
     if (setGolfAnimationToPlay) {
       setGolfAnimationToPlay(animationName ?? "");
     }
-    
 
     // Reset for next shot
     setTimeout(() => {
@@ -157,7 +156,6 @@ export default function PowerMeterRevised() {
       setShotDirection?.("default");
     }, 4000); // Reset after 1 second
   };
-
 
   return (
     <div>

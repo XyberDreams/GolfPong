@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { useExperience } from "../hooks/useExperience";
 
+
 export default function MobileUIController() {
   const shotEffects = useShotEffects() || {
     holesHit: 0,
@@ -143,7 +144,7 @@ export default function MobileUIController() {
         )}
       </AnimatePresence>
       <div className=" col-start-1 col-end-11 row-start-10 row-end-21 flex justify-center relative">
-        <PowerMeterRevised onShot={() => setTimeout(handleShow, 1500)} />
+        <PowerMeterRevised  />
       </div>
     </div>
   );
