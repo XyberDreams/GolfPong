@@ -1,9 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
-import useExperience, { ShotResult } from "../hooks/useExperience";
+import useExperience from "../hooks/useExperience";
 import useGolfShotLogic from "../hooks/useGolfShotLogic";
 import { getAnimationName } from "../config/animationMap";
 import { useShotEffects } from "../hooks/useShotEffects";
+import { ShotResult } from "../context/ExperienceContext"; // adjust path as needed
 
 // Replace with your actual PNG path
 const BALL_IMG = "/golfpong/golfball7.png";
