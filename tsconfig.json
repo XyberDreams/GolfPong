@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
+    "typeRoots": ["./node_modules/@types", "./types"]
     // ...other options
   }
 }
