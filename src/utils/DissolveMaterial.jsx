@@ -40,12 +40,6 @@ csm_DiffuseColor.a = finalAlpha;
 csm_DiffuseColor.rgb = mix(csm_DiffuseColor.rgb, uColor, border);
   }`);
 
-const uniforms = {
-  uThickness: { value: 0.1 },
-  uColor: { value: new THREE.Color("#eb5a13").multiplyScalar(20) },
-  uProgress: { value: 0 },
-};
-
 export function DissolveMaterial({
   baseMaterial,
   thickness = 0.1,
@@ -55,6 +49,15 @@ export function DissolveMaterial({
   duration = 3.2,
   visible = true,
 }) {
+  const uniforms = React.useMemo(
+    () => ({
+      uThickness: { value: thickness },
+      uColor: { value: new THREE.Color(color).multiplyScalar(intensity) },
+      uProgress: { value: 0 },
+    }),
+    [thickness, color, intensity]
+  );
+
   React.useLayoutEffect(() => {
     uniforms.uThickness.value = thickness;
     uniforms.uColor.value.set(color).multiplyScalar(intensity);

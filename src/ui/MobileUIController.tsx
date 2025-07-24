@@ -59,10 +59,6 @@ export default function MobileUIController() {
 
   return (
     <div className="fixed inset-0 z-50 grid grid-cols-10 grid-rows-20  ">
-      {/* <div className="rounded-xl text-center text-gray-800 flex flex-col items-start pl-4 pt-2 pointer-events-auto col-span-3 row-span-2">
-        <div className="text-3xl font-bold">{holesRemaining}/6</div>
-        <span className="text-sm font-medium">Remaining</span>
-      </div> */}
       <div
         className="absolute top-2 left-2 h-14 flex items-center overflow-hidden"
         style={{ minWidth: 140 }}

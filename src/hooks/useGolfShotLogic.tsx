@@ -70,10 +70,10 @@ export function useGolfShotLogic() {
         setHoles((prev) => {
           const newHoles = prev.map((h, i) => (i === targetIdx ? false : h));
           // Use newHoles to reset dissolvingHoles
-          if (setDissolvingHoles)
-            setDissolvingHoles((prevDissolve) =>
-              prevDissolve.map((d, i) => (newHoles[i] ? true : d))
-            );
+          // if (setDissolvingHoles)
+          //   setDissolvingHoles((prevDissolve) =>
+          //     prevDissolve.map((d, i) => (newHoles[i] ? true : d))
+          //   );
           return newHoles;
         });
         setTargetIdx?.(null);

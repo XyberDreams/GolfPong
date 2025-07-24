@@ -173,9 +173,8 @@ export function GP_Scene2(props) {
               <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry}>
                 {!dissolvingHoles[0] ? (
                   <>
-                    {console.log("Dissolve effect applied for hole 0")}
                     <DissolveMaterial
-                      baseMaterial={materials["Material.005"].clone()}
+                      baseMaterial={materials["Material.003"].clone()}
                       visible={true}
                       duration={1}
                       color="#eb5a13"
