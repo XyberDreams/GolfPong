@@ -150,6 +150,7 @@ export default function PowerMeterRevised() {
       setTargetIdx?.(null);
       setLastShot?.(missResult);
       console.log("THIS IS RESULT OF MISS: ", missResult);
+      result = missResult;
     }
 
     //Returns the shot e.g., shotPerfect1, shotShort1, shotLong3 etc
