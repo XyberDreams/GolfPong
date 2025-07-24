@@ -67,7 +67,7 @@ export default function PowerMeterRevised() {
     let raf: number;
 
     function animate() {
-      angle += direction * 0.7; // Adjust speed here
+      angle += direction * 1.2; // Adjust speed here
       if (angle >= 50) {
         angle = 50;
         direction = -1;
@@ -144,6 +144,7 @@ export default function PowerMeterRevised() {
           typeof shotResult.holeIdx === "number" ? shotResult.holeIdx : null,
       };
       setLastShot?.(safeResult);
+      result = safeResult;
       console.log("THIS IS RESULT: ", safeResult);
     } else {
       const missResult: ShotResult = { hit: false, holeIdx: null };
