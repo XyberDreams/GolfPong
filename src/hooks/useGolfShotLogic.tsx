@@ -12,7 +12,7 @@ export function useGolfShotLogic() {
   const ctx = useContext(ExperienceContext);
   if (!ctx)
     throw new Error("useGolfShotLogic must be used within ExperienceProvider");
-  const { holes, setHoles, playSFX } = ctx;
+  const { holes, setHoles, playSFX, dissolvingHoles, setDissolvingHoles } = ctx;
 
   // direction: "left" | "center" | "right"
   function handleShot(direction: "left" | "center" | "right") {
@@ -27,15 +27,20 @@ export function useGolfShotLogic() {
     console.log("First available hole index in priorities:", availableIdx);
 
     if (availableIdx !== undefined) {
+      setTimeout(() => {
+      if (setDissolvingHoles) setDissolvingHoles(prev => prev.map((d, i) => (i === availableIdx ? false : d)));
+      }, 3000);
       // Mark the hole as removed
-      setHoles((prev) => {
-        const updated = prev.map((h, i) => (i === availableIdx ? false : h));
-        console.log(`Hole ${availableIdx} hit! Updated holes:`, updated);
-        return updated;
-      });
+      setTimeout(() => {
+        setHoles((prev) => {
+          const updated = prev.map((h, i) => (i === availableIdx ? false : h));
+          // if (setDissolvingHoles) setDissolvingHoles(prev => prev.map((d, i) => i === availableIdx ? false : d));
+          return updated;
+        });
+      }, 4000);
 
       // Optionally play a sound or trigger animation
-    //   playSFX?.("hit");
+      //   playSFX?.("hit");
       return { hit: true, holeIdx: availableIdx };
     } else {
       // Missed shot

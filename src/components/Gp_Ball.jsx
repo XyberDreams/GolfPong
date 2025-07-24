@@ -8,9 +8,14 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { KTX2Loader } from "three/examples/jsm/Addons.js";
 import useExperience from "../hooks/useExperience";
 import * as THREE from "three";
+import { CustomTrail } from "./CustomTrail";
+import { useControls, button } from "leva";
 
 export function GP_Ball(props) {
   const group = React.useRef();
+  const ballRef = useRef();
+  const trailRef = useRef();
+
   const { nodes, materials, animations } = useGLTF(
     "/golfpong/gp_ball.glb",
     undefined,
@@ -31,30 +36,65 @@ export function GP_Ball(props) {
   useEffect(() => {
     if (golfAnimationToPlay && actions[golfAnimationToPlay]) {
       actions[golfAnimationToPlay].reset();
-      actions[golfAnimationToPlay].setLoop(THREE.LoopOnce, 1); // Clamp at end
+      actions[golfAnimationToPlay].setLoop(THREE.LoopOnce, 1);
       actions[golfAnimationToPlay].clampWhenFinished = true;
       actions[golfAnimationToPlay].play();
-      return () => actions[golfAnimationToPlay].stop();
+
+      // Only reset, do not play again
+      const timer = setTimeout(() => {
+        actions[golfAnimationToPlay].reset();
+        actions[golfAnimationToPlay].stop();
+        trailRef.current?.clearTrail();
+      }, 5000);
+
+      return () => {
+        clearTimeout(timer);
+        actions[golfAnimationToPlay].stop();
+        trailRef.current?.clearTrail();
+      };
     }
   }, [golfAnimationToPlay]);
 
-  useEffect(() => {
-    if (animations && animations.length > 0) {
-      console.log(
-        "Ball animation names:",
-        animations.map((a) => a.name)
-      );
-    }
-  }, [animations]);
+  // useEffect(() => {
+  //   if (animations && animations.length > 0) {
+  //     console.log(
+  //       "Ball animation names:",
+  //       animations.map((a) => a.name)
+  //     );
+  //   }
+  // }, [animations]);
 
   return (
-       <group ref={group} {...props} dispose={null}>
-         <group name="Scene">
-           <group name="ball" position={[-0.002, -2.28, -0.004]} rotation={[-0.007, 0, 0]}>
-             <mesh name="Cube050" geometry={nodes.Cube050.geometry} material={materials['Material.012']} />
-             <mesh name="Cube050_1" geometry={nodes.Cube050_1.geometry} material={materials['Material.011']} />
-           </group>
-         </group>
-       </group>
+    <group ref={group} {...props} dispose={null}>
+      <CustomTrail
+      ref={trailRef}
+        width={0.4}
+        color="#6afefe"
+        length={10}
+        decay={2}
+        attenuation={(width) => width}
+        target={ballRef}
+      >
+        <group name="Scene">
+          <group
+            ref={ballRef}
+            name="ball"
+            position={[-0.002, -2.28, -0.004]}
+            rotation={[-0.007, 0, 0]}
+          >
+            <mesh
+              name="Cube050"
+              geometry={nodes.Cube050.geometry}
+              material={materials["Material.012"]}
+            />
+            <mesh
+              name="Cube050_1"
+              geometry={nodes.Cube050_1.geometry}
+              material={materials["Material.011"]}
+            />
+          </group>
+        </group>
+      </CustomTrail>
+    </group>
   );
 }

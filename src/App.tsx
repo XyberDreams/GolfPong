@@ -27,14 +27,15 @@ import PowerBarImage from "./ui/PowerBarImage";
 import { GP_Scene2 } from "./components/Gp_Scene2.jsx";
 import MobileUIController from "./ui/MobileUIController";
 import { GP_Ball } from "./components/Gp_Ball.jsx";
+import GP_Scene from "./components/GP_Scene.jsx";
+import Test_Dissolve from "./components/Test_Dissolve.jsx";
 
 function App() {
   const isMobile = useIsMobile();
   const { activeCamera, navigationPOV } = useExperience();
   const [ktxReady, setKtxReady] = useState(false);
 
-  const handleShow = () => {
-  }
+  const handleShow = () => {};
 
   return (
     <>
@@ -42,19 +43,23 @@ function App() {
         <>
           {/* <PowerMeterRevised />
           <SwingMessage /> */}
-          <MobileUIController/>
-          
+          <MobileUIController />
 
           {/* <PowerBarImage /> */}
 
           {/* <SwingMessage /> */}
           <Canvas>
-                        {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
+            {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
 
-               <CameraControls />
-               <GP_Ball />
-               <GP_Scene2 />
-         <Environment preset="city" />
+            <CameraControls />
+            <GP_Ball />
+            {/* {activeCamera === "blenderCamera" && (
+              <BlenderCamera url="/golfpong/gp_camera" />
+            )} */}
+            <GP_Scene2 />
+            {/* <Test_Dissolve /> */}
+            {/* <GP_Scene /> */}
+            <Environment preset="city" />
           </Canvas>
         </>
       ) : (
@@ -65,9 +70,11 @@ function App() {
           <Canvas>
             {/* {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />} */}
             {/* <GP_Scene2 /> */}
-
+            {activeCamera === "blenderCamera" && (
+              <BlenderCamera url="/golfpong/gp_camera" />
+            )}
             <PCExperience />
-            <CameraControls />
+            {/* <CameraControls /> */}
             {/* {activeCamera === "presetCamera" && <CameraManager />}
             {activeCamera === "blenderCamera" && (
               <BlenderCamera url="/golfpong/gp_camera" />

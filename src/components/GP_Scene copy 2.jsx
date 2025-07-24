@@ -131,19 +131,31 @@ export default function GP_Scene(props) {
     Dissolve: button(() => setDissolveVisible((prev) => !prev)),
   });
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isBallMoving.current && trailRef.current.length > 0) {
+        trailRef.current.shift();
+        setRerender((r) => r + 1);
+        console.log(
+          "Trail updated (fade):",
+          trailRef.current.map((v) => v.toArray())
+        );
+      }
+    }, 100);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group>
         <CustomTrail
-          width={0.4}
-          color="#6afefe"
-          length={10}
-          decay={2}
-          attenuation={(width) => width}
-          // decay={1.5}
-          // local={false}
-          // stride={0.01}
-          // interval={5}
+          width={0.2}
+          color="hotpink"
+          length={5}
+          decay={1.5}
+          local={false}
+          stride={0.01}
+          interval={5}
         >
           <group
             ref={ballRef}

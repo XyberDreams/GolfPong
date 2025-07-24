@@ -32,15 +32,15 @@ const fragmentShader = patchShaders(/* glsl */ `
     float progress = uProgress;
 
 
-    float alpha = step(1.0 - progress, noise);
-    float border = step((1.0 - progress) - uThickness, noise) - alpha;
-    csm_DiffuseColor.a = alpha + border;
-    csm_DiffuseColor.rgb = mix(csm_DiffuseColor.rgb, uColor, border);
+float alpha = step(progress, noise);
+float border = step(progress - uThickness, noise) - alpha;
+float finalAlpha = alpha + border;
+if (progress < 0.01) finalAlpha = 0.0;
+csm_DiffuseColor.a = finalAlpha;
+csm_DiffuseColor.rgb = mix(csm_DiffuseColor.rgb, uColor, border);
   }`);
 
-
 const uniforms = {
-
   uThickness: { value: 0.1 },
   uColor: { value: new THREE.Color("#eb5a13").multiplyScalar(20) },
   uProgress: { value: 0 },
@@ -61,8 +61,8 @@ export function DissolveMaterial({
   }, [feather, thickness, color, intensity]);
 
   useFrame((_state, delta) => {
-    easing.damp(uniforms.uProgress, "value", visible ? 1 : 0, duration, delta)
-  })
+    easing.damp(uniforms.uProgress, "value", visible ? 1 : 0, duration, delta);
+  });
   return (
     <>
       <CSM
@@ -73,7 +73,6 @@ export function DissolveMaterial({
         toneMapped={false}
         transparent
       />
-    
     </>
   );
 }

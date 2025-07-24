@@ -70,7 +70,7 @@ export function useTrail(target: Object3D, settings: Partial<Settings>) {
   } as Settings;
 
   // The points array stores the trail's positions as a flat Float32Array
-  const points = React.useRef<Float32Array>(null);
+const points = React.useRef<Float32Array | null>(null);
   const [worldPosition] = React.useState(() => new Vector3());
 
   // When the target or length changes, initialize the points array
@@ -149,26 +149,6 @@ export const CustomTrail = React.forwardRef(function CustomTrail(
 
   const ref = React.useRef<Group>(null!);
   const [anchor, setAnchor] = React.useState<Object3D>(null!);
-  const trailPointsRef = React.useRef([]); // or whatever your trail points are
-
-  // Expose clearTrail method
-  React.useImperativeHandle(forwardRef, () => ({
-    clearTrail: () => {
-      if (points.current) {
-        // Reset all points to the current anchor position
-        const pos = anchor
-          ? local
-            ? anchor.position
-            : anchor.getWorldPosition(new Vector3())
-          : new Vector3();
-        for (let i = 0; i < points.current.length; i += 3) {
-          points.current[i] = pos.x;
-          points.current[i + 1] = pos.y;
-          points.current[i + 2] = pos.z;
-        }
-      }
-    },
-  }));
 
   // Get the points for the trail
   const points = useTrail(anchor, { length, decay, local, stride, interval });
