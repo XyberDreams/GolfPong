@@ -24,10 +24,8 @@ import PowerMeter from "./ui/PowerMeter";
 import SwingMessage from "./ui/SwingMessage";
 import PowerMeterRevised from "./ui/PowerMeterRevised";
 import PowerBarImage from "./ui/PowerBarImage";
-// @ts-ignore
 import { GP_Scene2 } from "./components/Gp_Scene2.jsx";
 import MobileUIController from "./ui/MobileUIController";
-// @ts-ignore
 import { GP_Ball } from "./components/Gp_Ball.jsx";
 
 function App() {
