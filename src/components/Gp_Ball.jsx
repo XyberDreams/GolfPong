@@ -45,7 +45,7 @@ export function GP_Ball(props) {
         actions[golfAnimationToPlay].reset();
         actions[golfAnimationToPlay].stop();
         trailRef.current?.clearTrail();
-      }, 5000);
+      }, 4000);
 
       return () => {
         clearTimeout(timer);

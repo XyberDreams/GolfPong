@@ -8,11 +8,7 @@ const holePriority = {
   right: [2, 4], // top-right, middle-right
 };
 
-export function getTargetHole(
-  direction: "left" | "center" | "right",
-  strength: number,
-  dragX: number
-) {
+function getTargetHole(direction: "left" | "center" | "right", strength: number, dragX: number) {
   if (direction === "left") {
     // left: hole 0 (top-left) for strong drag, hole 3 (middle-left) for weak drag
     return strength > 0.5 ? 0 : 3;
@@ -23,8 +19,8 @@ export function getTargetHole(
   }
   if (direction === "center") {
     // center: use both dragX and strength to pick between 1, 3, 4, 5
-    if (strength < 0.5) return 5; // middle-left
-    if (strength < 0.8) return dragX < 0 ? 3 : 4; // top-center or middle-right
+    if (strength < 0.33) return 5; // middle-left
+    if (strength < 0.66) return dragX < 0 ? 3 : 4; // top-center or middle-right
     return 1; // bottom
   }
   return null;
@@ -34,53 +30,42 @@ export function useGolfShotLogic() {
   const ctx = useContext(ExperienceContext);
   if (!ctx)
     throw new Error("useGolfShotLogic must be used within ExperienceProvider");
-  const {
-    holes,
-    setHoles,
-    playSFX,
-    dissolvingHoles,
-    setDissolvingHoles,
-    targetIdx,
-    setTargetIdx,
-  } = ctx;
+  const { holes, setHoles, playSFX, dissolvingHoles, setDissolvingHoles } = ctx;
 
   // direction: "left" | "center" | "right"
-  function handleShot(
-    direction: "left" | "center" | "right",
-    strength: number,
-    dragX: number
-  ) {
+  function handleShot(direction: "left" | "center" | "right", strength: number, dragX: number) {
     if (!holes || !setHoles) return { hit: false, holeIdx: null };
 
-    // console.log("Target hole index for this shot:", shotIdx);
+      const targetIdx = getTargetHole(direction, strength, dragX);
 
-    // console.log(`Shot direction: ${direction}`);
-    // console.log("Target hole index for this shot:", targetIdx);
-    // console.log("Current holes state:", holes);
+    const priorities = holePriority[direction];
+    console.log(`Shot direction: ${direction}`);
+    console.log("Hole priorities for this shot:", priorities);
+    console.log("Current holes state:", holes);
 
-    if (targetIdx !== null) {
+    const availableIdx = priorities.find((idx) => holes[idx]);
+    console.log("First available hole index in priorities:", availableIdx);
+
+    if (availableIdx !== undefined) {
       setTimeout(() => {
-        if (setDissolvingHoles)
-          setDissolvingHoles((prev) =>
-            prev.map((d, i) => (i === targetIdx ? false : d))
-          );
+      if (setDissolvingHoles) setDissolvingHoles(prev => prev.map((d, i) => (i === availableIdx ? false : d)));
       }, 3000);
+      // Mark the hole as removed
       setTimeout(() => {
-        setHoles((prev) => prev.map((h, i) => (i === targetIdx ? false : h)));
-        if (setDissolvingHoles)
-          setDissolvingHoles((prev) =>
-            prev.map((d, i) => (holes[i] ? true : d))
-          );
-        setTargetIdx?.(null);
+        setHoles((prev) => {
+          const updated = prev.map((h, i) => (i === availableIdx ? false : h));
+          // if (setDissolvingHoles) setDissolvingHoles(prev => prev.map((d, i) => i === availableIdx ? false : d));
+          return updated;
+        });
       }, 4500);
 
-
-      return { hit: true, holeIdx: targetIdx };
+      // Optionally play a sound or trigger animation
+      //   playSFX?.("hit");
+      return { hit: true, holeIdx: availableIdx };
     } else {
       // Missed shot
       playSFX?.("swing2");
       console.log("Missed shot! No available holes in this direction.");
-      setTargetIdx?.(null);
       return { hit: false, holeIdx: null };
     }
   }

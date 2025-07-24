@@ -127,6 +127,8 @@ export interface ExperienceContextProps {
   setTotalStrokes: React.Dispatch<React.SetStateAction<number>>;
   dissolvingHoles?: boolean[];
   setDissolvingHoles?: React.Dispatch<React.SetStateAction<boolean[]>>;
+  targetIdx?: number | null;
+  setTargetIdx?: React.Dispatch<React.SetStateAction<number | null>>;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -161,6 +163,7 @@ export const ExperienceProvider = ({
   const [lastShot, setLastShot] = useState<ShotResult | null>(null);
   const [totalStrokes, setTotalStrokes] = useState(1);
   const [dissolvingHoles, setDissolvingHoles] = useState<boolean[]>([true, true, true, true, true, true]);
+  const [targetIdx, setTargetIdx] = useState<number | null>(null);
 
   //SOUND
   const [bgMusicPlaying, setBGMusicPlaying] = useState<boolean>(false);
@@ -219,6 +222,8 @@ export const ExperienceProvider = ({
         setTotalStrokes,
         dissolvingHoles,
         setDissolvingHoles,
+        targetIdx,
+        setTargetIdx,
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import useExperience from "../hooks/useExperience";
-import useGolfShotLogic from "../hooks/useGolfShotLogic";
+import useGolfShotLogic, {getTargetHole} from "../hooks/useGolfShotLogic";
 import { getAnimationName } from "../config/animationMap";
 import { useShotEffects } from "../hooks/useShotEffects";
 import { ShotResult } from "../context/ExperienceContext"; // adjust path as needed
@@ -32,6 +32,8 @@ export default function PowerMeterRevised() {
     golfAnimationToPlay,
     setGolfAnimationToPlay,
     setLastShot,
+    setTargetIdx,
+    dissolvingHoles,
   } = useExperience();
   const { handleShot } = useGolfShotLogic();
 
@@ -46,10 +48,12 @@ export default function PowerMeterRevised() {
   const minScale = 0.3;
   const maxScale = 1.2;
   const maxDrag = 100;
+  const maxDragY = 380;
   const scale =
     minScale + (Math.min(dragY, maxDrag) / maxDrag) * (maxScale - minScale);
 
   const powerLevel = (pointerAngle + 50) / 90; // 0 (min) to 1 (max)
+  const [power, setPower] = useState(0);
 
   const directions = ["left", "center", "right"] as const;
   function getRandomDirection() {
@@ -79,6 +83,10 @@ export default function PowerMeterRevised() {
     return () => cancelAnimationFrame(raf);
   }, [paused]);
 
+  useEffect(() => {
+    console.log("DISSOLVING HOLESSSSS: ", dissolvingHoles);
+  }, [dissolvingHoles]);
+  
   function getShotType(power: number) {
     if (power < 0.15 || power > 0.85) {
       return "shotLong";
@@ -128,11 +136,12 @@ export default function PowerMeterRevised() {
     let result: ShotResult | null = null;
     // Result will return {hit: true, holeIdx: number} ; where the number is your last hole it hit if true, and false null if miss
     if (shotType === "shotPerfect") {
-      result = handleShot(direction);
+      result = handleShot(direction, powerLevel, dragX);
       console.log("THIS IS RESULT: ", result);
       setLastShot?.(result);
     } else {
       result = { hit: false, holeIdx: null };
+      setTargetIdx?.(null);
       console.log("THIS IS RESULT OF MISS: ", result);
       setLastShot?.(result);
     }
@@ -158,6 +167,15 @@ export default function PowerMeterRevised() {
     }, 4000); // Reset after 1 second
   };
 
+  function updateTargetIdx(
+    direction: "left" | "center" | "right",
+    strength: number,
+    dragX: number
+  ) {
+    const idx = getTargetHole(direction, strength, dragX);
+    setTargetIdx?.(idx);
+  }
+
   return (
     <div>
       <motion.div
@@ -170,7 +188,11 @@ export default function PowerMeterRevised() {
         dragSnapToOrigin={true}
         dragConstraints={{ top: 0, bottom: 5000, left: -5000, right: 5000 }}
         dragElastic={0.2}
-        onDragStart={() => setIsDragging(true)}
+        onDragStart={() => {
+          setIsDragging(true);
+          setPower(0);
+          // console.log("Power changed:", 0);
+        }}
         onDrag={(event, info) => {
           setOffset({ x: info.offset.x, y: info.offset.y });
           setDragY(Math.max(info.offset.y, 0));
@@ -182,6 +204,11 @@ export default function PowerMeterRevised() {
           else if (info.offset.x > 40) direction = "left";
           else direction = "center";
           setShotDirection?.(direction);
+
+          const newPower = Math.min(Math.max(info.offset.y / maxDragY, 0), 1);
+          setPower(newPower);
+          updateTargetIdx(direction, newPower, info.offset.x);
+          // console.log("Power changed:", newPower);
         }}
         onDragEnd={() => {
           triggerShot();

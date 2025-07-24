@@ -12,7 +12,7 @@ export function GP_Scene2(props) {
   const group = React.useRef();
   const { nodes, materials, animations } = useGLTF("/golfpong/gp_scene2.glb");
   const { actions } = useAnimations(animations, group);
-  const { holes, shotDirection, dissolvingHoles } = useExperience();
+  const { holes, shotDirection, dissolvingHoles, targetIdx } = useExperience();
 
   const holePriority = {
     left: [0, 3],
@@ -21,8 +21,8 @@ export function GP_Scene2(props) {
   };
 
   useEffect(() => {
-    console.log("DISSOLVING HOLES: ", dissolvingHoles);
-  }, [dissolvingHoles]);
+    console.log("TARGET IDX: ", targetIdx);
+  }, [targetIdx]);
 
   return (
     <group ref={group} {...props} dispose={null}>
@@ -180,7 +180,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(0)
+                    {...(targetIdx === 0
                       ? materials["a.grass.001"]
                       : materials["Material.003"])}
                   />
@@ -200,7 +200,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(0)
+                    {...(targetIdx === 0
                       ? materials["a.grass.001"]
                       : materials["Material.005"])}
                   />
@@ -226,7 +226,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(1)
+                    {...(targetIdx === 1
                       ? materials["a.grass.001"]
                       : materials["Material.003"])}
                   />
@@ -246,7 +246,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(1)
+                    {...(targetIdx === 1
                       ? materials["a.grass.001"]
                       : materials["Material.005"])}
                   />
@@ -272,7 +272,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(2)
+                    {...(targetIdx === 2
                       ? materials["a.grass.001"]
                       : materials["Material.003"])}
                   />
@@ -292,7 +292,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(2)
+                    {...(targetIdx === 2
                       ? materials["a.grass.001"]
                       : materials["Material.005"])}
                   />
@@ -318,7 +318,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(3)
+                    {...(targetIdx === 3
                       ? materials["a.grass.001"]
                       : materials["Material.003"])}
                   />
@@ -338,7 +338,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(3)
+                    {...(targetIdx === 3
                       ? materials["a.grass.001"]
                       : materials["Material.005"])}
                   />
@@ -364,7 +364,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(4)
+                    {...(targetIdx === 4
                       ? materials["a.grass.001"]
                       : materials["Material.003"])}
                   />
@@ -384,7 +384,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(4)
+                    {...(targetIdx === 4
                       ? materials["a.grass.001"]
                       : materials["Material.005"])}
                   />
@@ -410,7 +410,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(5)
+                    {...(targetIdx === 5
                       ? materials["a.grass.001"]
                       : materials["Material.003"])}
                   />
@@ -430,7 +430,7 @@ export function GP_Scene2(props) {
                 ) : (
                   <meshStandardMaterial
                     attach="material"
-                    {...(holePriority[shotDirection]?.includes(5)
+                    {...(targetIdx === 5
                       ? materials["a.grass.001"]
                       : materials["Material.005"])}
                   />
