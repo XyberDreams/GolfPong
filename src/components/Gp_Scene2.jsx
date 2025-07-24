@@ -24,6 +24,7 @@ export function GP_Scene2(props) {
     console.log("TARGET IDX: ", targetIdx);
   }, [targetIdx]);
 
+
   return (
     <group ref={group} {...props} dispose={null}>
       <group name="Scene">
@@ -171,12 +172,15 @@ export function GP_Scene2(props) {
             >
               <mesh name="Cylinder052" geometry={nodes.Cylinder052.geometry}>
                 {!dissolvingHoles[0] ? (
-                  <DissolveMaterial
-                    baseMaterial={materials["Material.005"].clone()}
-                    visible={true}
-                    duration={1}
-                    color="#eb5a13"
-                  />
+                  <>
+                    {console.log("Dissolve effect applied for hole 0")}
+                    <DissolveMaterial
+                      baseMaterial={materials["Material.005"].clone()}
+                      visible={true}
+                      duration={1}
+                      color="#eb5a13"
+                    />
+                  </>
                 ) : (
                   <meshStandardMaterial
                     attach="material"

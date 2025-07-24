@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import useExperience from "../hooks/useExperience";
-import useGolfShotLogic, {getTargetHole} from "../hooks/useGolfShotLogic";
+import useGolfShotLogic, { getTargetHole } from "../hooks/useGolfShotLogic";
 import { getAnimationName } from "../config/animationMap";
 import { useShotEffects } from "../hooks/useShotEffects";
 import { ShotResult } from "../context/ExperienceContext"; // adjust path as needed
@@ -86,7 +86,7 @@ export default function PowerMeterRevised() {
   useEffect(() => {
     console.log("DISSOLVING HOLESSSSS: ", dissolvingHoles);
   }, [dissolvingHoles]);
-  
+
   function getShotType(power: number) {
     if (power < 0.15 || power > 0.85) {
       return "shotLong";
@@ -136,14 +136,20 @@ export default function PowerMeterRevised() {
     let result: ShotResult | null = null;
     // Result will return {hit: true, holeIdx: number} ; where the number is your last hole it hit if true, and false null if miss
     if (shotType === "shotPerfect") {
-      result = handleShot(direction, powerLevel, dragX);
-      console.log("THIS IS RESULT: ", result);
-      setLastShot?.(result);
+      const shotResult = handleShot(direction, powerLevel, dragX);
+      // Ensure holeIdx is null if undefined
+      const safeResult: ShotResult = {
+        hit: shotResult.hit,
+        holeIdx:
+          typeof shotResult.holeIdx === "number" ? shotResult.holeIdx : null,
+      };
+      setLastShot?.(safeResult);
+      console.log("THIS IS RESULT: ", safeResult);
     } else {
-      result = { hit: false, holeIdx: null };
+      const missResult: ShotResult = { hit: false, holeIdx: null };
       setTargetIdx?.(null);
-      console.log("THIS IS RESULT OF MISS: ", result);
-      setLastShot?.(result);
+      setLastShot?.(missResult);
+      console.log("THIS IS RESULT OF MISS: ", missResult);
     }
 
     //Returns the shot e.g., shotPerfect1, shotShort1, shotLong3 etc
