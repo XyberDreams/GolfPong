@@ -21,8 +21,6 @@ export default function PowerMeterRevised() {
   const [isDragging, setIsDragging] = useState(false);
   const [isShot, setIsShot] = useState("default");
   const [pointerAngle, setPointerAngle] = useState(0);
-  const pointerAngleRef = useRef(0);
-
   const [paused, setPaused] = useState(true);
   const {
     shotType,
@@ -47,7 +45,7 @@ export default function PowerMeterRevised() {
   const { holesHit, streak, uiMessage } = shotEffects;
 
   // Clamp dragY between 0 and 500, then map to scale between 0.5 and 1.2
-  const minScale = 1.5;
+  const minScale = 0.3;
   const maxScale = 1.2;
   const maxDrag = 100;
   const maxDragY = 380;
@@ -63,41 +61,27 @@ export default function PowerMeterRevised() {
   }
 
   useEffect(() => {
-    pointerAngleRef.current = pointerAngle;
-  }, [pointerAngle]);
-
-  useEffect(() => {
-    if (paused) return;
+    if (paused) return; // Skip animation if paused
     let direction = 1;
+    let angle = pointerAngle; // Start from current angle
     let raf: number;
-    // setPointerAngle(0);
 
     function animate() {
-      setPointerAngle((prevAngle) => {
-        let angle = prevAngle + direction * 1.2;
-        if (angle >= 60) {
-          angle = 60;
-          direction = -1;
-        } else if (angle <= -60) {
-          angle = -60;
-          direction = 1;
-        }
-        return angle;
-      });
+      angle += direction * 1.2; // Adjust speed here
+      if (angle >= 50) {
+        angle = 50;
+        direction = -1;
+      } else if (angle <= -50) {
+        angle = -50;
+        direction = 1;
+      }
+      setPointerAngle(angle);
       raf = requestAnimationFrame(animate);
     }
 
     animate();
     return () => cancelAnimationFrame(raf);
   }, [paused]);
-
-  useEffect(() => {
-    console.log("Pointer Angle REF changed:", pointerAngleRef.current);
-  }, [pointerAngle]);
-
-  useEffect(() => {
-    console.log("Pointer Angl:", pointerAngle);
-  }, [pointerAngle]);
 
   useEffect(() => {
     console.log("DISSOLVING HOLESSSSS: ", dissolvingHoles);
@@ -124,11 +108,9 @@ export default function PowerMeterRevised() {
   }
 
   function getShotTypeFromAngle(angle: number) {
-    if (Math.abs(angle) <= 5) return "shotPerfect";
+    if (Math.abs(angle) <= 10) return "shotPerfect";
     if (Math.abs(angle) <= 35) return "shotShort";
-    if (Math.abs(angle) <= 60) return "shotLong";
-    // Optionally handle out-of-bounds
-    return "default";
+    return "shotLong";
   }
 
   // useEffect(() => {
@@ -155,7 +137,7 @@ export default function PowerMeterRevised() {
     // Function that returns shotLong, shotShort, or shotPerfect
     const shotType = getShotTypeFromAngle(pointerAngle);
     console.log("SHOT TYPE: ", shotType);
-    console.log("POINTER ANGLE USING TRIGGER SHOT: ", pointerAngle);
+       console.log("POINTER ANGLE: ", pointerAngle);
     // Function that returns left, center, or right
     const direction = getShotDirection(dragX);
 
@@ -193,11 +175,10 @@ export default function PowerMeterRevised() {
 
     // Reset for next shot
     setTimeout(() => {
-      // setPaused(false);
+      setPaused(false);
       setBallVisible(true);
       setIsDragging(false);
       setShotDirection?.("default");
-        setPointerAngle(0);
     }, 4000);
   };
 
@@ -245,10 +226,7 @@ export default function PowerMeterRevised() {
           // console.log("Power changed:", newPower);
         }}
         onDragEnd={() => {
-          setPaused(true);
-          setTimeout(() => {
-            triggerShot();
-          }, 50); // 50ms delay, adjust as needed
+          triggerShot();
         }}
         // animate={{ x: offset.x, y: offset.y }}
         transition={{ type: "spring", stiffness: 300, damping: 30 }}
@@ -288,58 +266,60 @@ export default function PowerMeterRevised() {
         )}
       </motion.div>
 
-      <motion.div
-        className="top-[-10%] absolute"
-        style={{
-          width: 140,
-          height: 140,
-          zIndex: 100,
-          // pointerEvents: "none",
-        }}
-        initial={{ scale: minScale }}
-        animate={{ scale }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
-        {/* Power Bar Image */}
-        <img
-          className="pointer-events-none"
-          src="/golfpong/power_bar2.png"
-          alt="Power Bar"
-          style={{
-            width: "100%",
-            height: "auto",
-            position: "absolute",
-            left: 0,
-            top: 0,
-          }}
-        />
-        {/* SVG Pointer */}
+      {isDragging && (
         <motion.div
-          className="z-[1000]"
+          className="top-[-10%] absolute"
           style={{
-            position: "absolute",
-            left: "50%",
-            transform: `translateX(-50%) rotate(${pointerAngle}deg)`,
-            width: 48,
-            height: 72,
-            pointerEvents: "none",
-            transformOrigin: "50% 100%",
+            width: 140,
+            height: 140,
+            zIndex: 1000,
+            // pointerEvents: "none",
           }}
+          initial={{ scale: minScale }}
+          animate={{ scale }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-          <svg
-            viewBox="-1.6 -1.6 19.20 19.20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="72"
+          {/* Power Bar Image */}
+          <img
+            className="pointer-events-none"
+            src="/golfpong/power_bar2.png"
+            alt="Power Bar"
+            style={{
+              width: "100%",
+              height: "auto",
+              position: "absolute",
+              left: 0,
+              top: 0,
+            }}
+          />
+          {/* SVG Pointer */}
+          <motion.div
+            className="z-[1000]"
+            style={{
+              position: "absolute",
+              left: "50%",
+              transform: `translateX(-50%) rotate(${pointerAngle}deg)`,
+              width: 48,
+              height: 72,
+              pointerEvents: "none",
+              transformOrigin: "50% 100%",
+            }}
           >
-            <path
-              d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z"
-              fill="#000000"
-            />
-          </svg>
+            <svg
+              viewBox="-1.6 -1.6 19.20 19.20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="72"
+            >
+              <path
+                d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z"
+                fill="#000000"
+              />
+            </svg>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      )}
     </div>
   );
 }
