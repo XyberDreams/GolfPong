@@ -50,6 +50,7 @@ export type ShotDirection = "default" | "left" | "right" | "center";
 export type ShotResult = {
   hit: boolean;
   holeIdx: number | null;
+  alreadyHit: boolean;
 };
 
 // Standard State

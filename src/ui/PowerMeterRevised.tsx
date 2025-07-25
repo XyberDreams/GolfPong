@@ -5,6 +5,7 @@ import useGolfShotLogic, { getTargetHole } from "../hooks/useGolfShotLogic";
 import { getAnimationName } from "../config/animationMap";
 import { useShotEffects } from "../hooks/useShotEffects";
 import { ShotResult } from "../context/ExperienceContext"; // adjust path as needed
+import { is } from "@react-three/fiber/dist/declarations/src/core/utils";
 
 // Replace with your actual PNG path
 const BALL_IMG = "/golfpong/golfball7.png";
@@ -91,13 +92,13 @@ export default function PowerMeterRevised() {
     return () => cancelAnimationFrame(raf);
   }, [paused]);
 
-  useEffect(() => {
-    console.log("Pointer Angle REF changed:", pointerAngleRef.current);
-  }, [pointerAngle]);
+  // useEffect(() => {
+  //   console.log("Pointer Angle REF changed:", pointerAngleRef.current);
+  // }, [pointerAngle]);
 
-  useEffect(() => {
-    console.log("Pointer Angl:", pointerAngle);
-  }, [pointerAngle]);
+  // useEffect(() => {
+  //   console.log("Pointer Angl:", pointerAngle);
+  // }, [pointerAngle]);
 
   useEffect(() => {
     console.log("DISSOLVING HOLESSSSS: ", dissolvingHoles);
@@ -168,12 +169,17 @@ export default function PowerMeterRevised() {
         hit: shotResult.hit,
         holeIdx:
           typeof shotResult.holeIdx === "number" ? shotResult.holeIdx : null,
+        alreadyHit: !!shotResult.alreadyHit,
       };
       setLastShot?.(safeResult);
       result = safeResult;
       console.log("THIS IS RESULT: ", safeResult);
     } else {
-      const missResult: ShotResult = { hit: false, holeIdx: null };
+      const missResult: ShotResult = {
+        hit: false,
+        holeIdx: null,
+        alreadyHit: false,
+      };
       setTargetIdx?.(null);
       setLastShot?.(missResult);
       console.log("THIS IS RESULT OF MISS: ", missResult);
@@ -188,7 +194,10 @@ export default function PowerMeterRevised() {
     });
 
     if (setGolfAnimationToPlay) {
-      setGolfAnimationToPlay(animationName ?? "");
+      setGolfAnimationToPlay(""); // Reset first to force change
+      setTimeout(() => {
+        setGolfAnimationToPlay(animationName ?? "");
+      }, 10); // Small delay to ensure state change
     }
 
     // Reset for next shot
@@ -197,9 +206,13 @@ export default function PowerMeterRevised() {
       setBallVisible(true);
       setIsDragging(false);
       setShotDirection?.("default");
-        setPointerAngle(0);
+      setPointerAngle(0);
     }, 4000);
   };
+
+  useEffect(() => {
+    console.log("GOLF ANIMAITON NAME PLAYING: ", golfAnimationToPlay);
+  }, [golfAnimationToPlay]);
 
   function updateTargetIdx(
     direction: "left" | "center" | "right",
@@ -288,58 +301,60 @@ export default function PowerMeterRevised() {
         )}
       </motion.div>
 
-      <motion.div
-        className="top-[-10%] absolute"
-        style={{
-          width: 140,
-          height: 140,
-          zIndex: 100,
-          // pointerEvents: "none",
-        }}
-        initial={{ scale: minScale }}
-        animate={{ scale }}
-        transition={{ type: "spring", stiffness: 300, damping: 30 }}
-      >
-        {/* Power Bar Image */}
-        <img
-          className="pointer-events-none"
-          src="/golfpong/power_bar2.png"
-          alt="Power Bar"
-          style={{
-            width: "100%",
-            height: "auto",
-            position: "absolute",
-            left: 0,
-            top: 0,
-          }}
-        />
-        {/* SVG Pointer */}
+      {isDragging && (
         <motion.div
-          className="z-[1000]"
+          className="top-[-10%] absolute"
           style={{
-            position: "absolute",
-            left: "50%",
-            transform: `translateX(-50%) rotate(${pointerAngle}deg)`,
-            width: 48,
-            height: 72,
-            pointerEvents: "none",
-            transformOrigin: "50% 100%",
+            width: 140,
+            height: 140,
+            zIndex: 100,
+            // pointerEvents: "none",
           }}
+          initial={{ scale: minScale }}
+          animate={{ scale }}
+          transition={{ type: "spring", stiffness: 300, damping: 30 }}
         >
-          <svg
-            viewBox="-1.6 -1.6 19.20 19.20"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            width="48"
-            height="72"
+          {/* Power Bar Image */}
+          <img
+            className="pointer-events-none"
+            src="/golfpong/power_bar2.png"
+            alt="Power Bar"
+            style={{
+              width: "100%",
+              height: "auto",
+              position: "absolute",
+              left: 0,
+              top: 0,
+            }}
+          />
+          {/* SVG Pointer */}
+          <motion.div
+            className="z-[1000]"
+            style={{
+              position: "absolute",
+              left: "50%",
+              transform: `translateX(-50%) rotate(${pointerAngle}deg)`,
+              width: 48,
+              height: 72,
+              pointerEvents: "none",
+              transformOrigin: "50% 100%",
+            }}
           >
-            <path
-              d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z"
-              fill="#000000"
-            />
-          </svg>
+            <svg
+              viewBox="-1.6 -1.6 19.20 19.20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              width="48"
+              height="72"
+            >
+              <path
+                d="M6 8L2 8L2 6L8 5.24536e-07L14 6L14 8L10 8L10 16L6 16L6 8Z"
+                fill="#000000"
+              />
+            </svg>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      )}
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { motion, AnimatePresence } from "motion/react";
 import { useEffect, useState } from "react";
 import { useExperience } from "../hooks/useExperience";
 
-
 export default function MobileUIController() {
   const shotEffects = useShotEffects() || {
     holesHit: 0,
@@ -21,6 +20,9 @@ export default function MobileUIController() {
 
   useEffect(() => {
     if (lastShot == null) return;
+      console.log("lastShot.hit:", lastShot.hit, "lastShot.alreadyHit:", lastShot.alreadyHit);
+
+
     playSFX?.("hit");
     setTotalStrokes((prev) => prev + 1);
 
@@ -35,6 +37,8 @@ export default function MobileUIController() {
         playSFX("swing_success2");
       } else if (holesHit === 6) {
         playSFX("swing_success3");
+      } else if (lastShot.hit && lastShot.alreadyHit) {
+        playSFX("swing_miss");
       } else if (lastShot.hit) {
         playSFX("new_turn");
       } else {
@@ -140,7 +144,7 @@ export default function MobileUIController() {
         )}
       </AnimatePresence>
       <div className=" col-start-1 col-end-11 row-start-10 row-end-21 flex justify-center relative">
-        <PowerMeterRevised  />
+        <PowerMeterRevised />
       </div>
     </div>
   );

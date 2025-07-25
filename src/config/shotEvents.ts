@@ -1,5 +1,7 @@
 export const SHOT_EVENTS = {
   Hit: { message: "Nice Hit!", sfx: "hit" },
+  Miss: { message: "Ball Missed!", sfx: "hit" },
+  AlreadyHit: { message: "Hole Already Hit!", sfx: "hit" },
   ShortMiss: { message: "Ball Short!", sfx: "hit" },
   LongMiss: { message: "Ball Long!", sfx: "hit" },
   "3Streak": { message: "TRIPLE!", sfx: "swing_success" },

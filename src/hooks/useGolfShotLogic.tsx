@@ -48,7 +48,7 @@ export function useGolfShotLogic() {
   function handleShot(
     direction: "left" | "center" | "right",
     strength: number,
-    dragX: number
+    dragX: number,
   ) {
     if (!holes || !setHoles) return { hit: false, holeIdx: null };
 
@@ -58,7 +58,12 @@ export function useGolfShotLogic() {
     // console.log("Target hole index for this shot:", targetIdx);
     // console.log("Current holes state:", holes);
 
-    if (targetIdx !== null) {
+    if (typeof targetIdx === "number" && targetIdx >= 0 && targetIdx < holes.length) {
+        if (holes[targetIdx] === false ) {
+          // Hole already hit!
+          setTargetIdx?.(targetIdx);
+          return { hit: true, holeIdx: targetIdx, alreadyHit: true };
+        }
       setTimeout(() => {
         if (setDissolvingHoles)
           setDissolvingHoles((prev) =>
@@ -79,13 +84,13 @@ export function useGolfShotLogic() {
         setTargetIdx?.(null);
       }, 4500);
 
-      return { hit: true, holeIdx: targetIdx };
+      return { hit: true, holeIdx: targetIdx, alreadyHit: false };
     } else {
       // Missed shot
       playSFX?.("swing2");
       console.log("Missed shot! No available holes in this direction.");
       setTargetIdx?.(null);
-      return { hit: false, holeIdx: null };
+      return { hit: false, holeIdx: null, alreadyHit: false };
     }
   }
 

@@ -11,16 +11,19 @@ export function useShotEffects() {
   const [streak, setStreak] = useState(0);
   const [uiMessage, setUiMessage] = useState("");
 
-
-
   useEffect(() => {
     if (!lastShot) return;
 
     let eventKey: ShotEventKey = "Hit";
     let nextStreak = streak;
 
+    if (lastShot.alreadyHit && lastShot.hit) {
+      eventKey = "AlreadyHit";
+      nextStreak = 0;
+    }
+
     if (!lastShot.hit) {
-      eventKey = "ShortMiss";
+      eventKey = "Miss";
       nextStreak = 0;
     } else {
       nextStreak = streak + 1;
