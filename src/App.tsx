@@ -20,8 +20,7 @@ import {
 } from "@react-three/drei";
 import KTX2Support from "./components/KTX2Support";
 import PCExperience from "./components/PCExperience";
-import PowerMeter from "./ui/PowerMeter";
-import SwingMessage from "./ui/SwingMessage";
+
 import PowerMeterRevised from "./ui/PowerMeterRevised";
 import PowerBarImage from "./ui/PowerBarImage";
 import { GP_Scene2 } from "./components/Gp_Scene2.jsx";
@@ -29,10 +28,12 @@ import MobileUIController from "./ui/MobileUIController";
 import { GP_Ball } from "./components/Gp_Ball.jsx";
 import GP_Scene from "./components/GP_Scene.jsx";
 import Test_Dissolve from "./components/Test_Dissolve.jsx";
+import MobileCanvasController from "./components/MobileCanvasController";
+import Loader from "./components/Loader";
 
 function App() {
   const isMobile = useIsMobile();
-  const { activeCamera, navigationPOV } = useExperience();
+  const { activeCamera, navigationPOV, setGpExperienceState } = useExperience();
   const [ktxReady, setKtxReady] = useState(false);
 
   const handleShow = () => {};
@@ -41,24 +42,27 @@ function App() {
     <>
       {isMobile ? (
         <>
-          {/* <PowerMeterRevised />
-          <SwingMessage /> */}
           <MobileUIController />
+          {/* <button onClick={() => setGpExperienceState?.("gameStart")}>
+            Start Game
+          </button>
+          <button
+            className="z-[10000] w-[500px] bg-red-500 pointer-events-auto fixed"
+            onClick={() => setGpExperienceState?.("gameFinsh")}
+          >
+            End Game
+          </button> */}
 
-          {/* <PowerBarImage /> */}
+          {/* <Loader isReady={ktxReady}/> */}
 
-          {/* <SwingMessage /> */}
           <Canvas>
             {!ktxReady && <KTX2Support onReady={() => setKtxReady(true)} />}
 
-            <CameraControls />
-            <GP_Ball />
-            {/* {activeCamera === "blenderCamera" && (
-              <BlenderCamera url="/golfpong/gp_camera" />
-            )} */}
-            <GP_Scene2 />
-            {/* <Test_Dissolve /> */}
-            {/* <GP_Scene /> */}
+            {/* <CameraControls /> */}
+            <MobileCanvasController />
+            {activeCamera === "blenderCamera" && (
+              <BlenderCamera url="/golfpong/gp_camera2" />
+            )}
             <Environment preset="city" />
           </Canvas>
         </>

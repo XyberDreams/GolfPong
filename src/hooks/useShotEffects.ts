@@ -25,21 +25,22 @@ export function useShotEffects() {
     if (!lastShot.hit) {
       eventKey = "Miss";
       nextStreak = 0;
-    } else {
+    } else if (!lastShot.alreadyHit) {
       nextStreak = streak + 1;
       if (nextStreak === 3) eventKey = "3Streak";
       if (nextStreak === 5) eventKey = "5Streak";
       if (holesHit === holes.length) eventKey = "6Streak";
+      console.log("shouldnt");
     }
 
     setStreak((prev) => {
-      const nextStreak = lastShot.hit ? prev + 1 : 0;
-      return nextStreak;
+      return lastShot.hit && !lastShot.alreadyHit ? prev + 1 : 0;
     });
     setUiMessage(SHOT_EVENTS[eventKey].message);
     // playSFX?.("hit");
   }, [lastShot]);
 
+  //GAME OVER
   useEffect(() => {
     if (holesHit === holes.length) {
       setUiMessage(SHOT_EVENTS.GameOver.message);

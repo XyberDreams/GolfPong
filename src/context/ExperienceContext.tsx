@@ -47,6 +47,9 @@ export const lockedState = {
 
 export type ShotDirection = "default" | "left" | "right" | "center";
 
+export type GP_ExperienceState = "default" | "gameStart" | "gameFinsh" | "diorama" | "unboxing";
+
+
 export type ShotResult = {
   hit: boolean;
   holeIdx: number | null;
@@ -130,6 +133,8 @@ export interface ExperienceContextProps {
   setDissolvingHoles?: React.Dispatch<React.SetStateAction<boolean[]>>;
   targetIdx?: number | null;
   setTargetIdx?: React.Dispatch<React.SetStateAction<number | null>>;
+  gpExperienceState?: GP_ExperienceState;
+  setGpExperienceState?: React.Dispatch<React.SetStateAction<GP_ExperienceState>>;
 }
 
 const ExperienceContext = createContext<ExperienceContextProps | undefined>(
@@ -165,6 +170,7 @@ export const ExperienceProvider = ({
   const [totalStrokes, setTotalStrokes] = useState(1);
   const [dissolvingHoles, setDissolvingHoles] = useState<boolean[]>([true, true, true, true, true, true]);
   const [targetIdx, setTargetIdx] = useState<number | null>(null);
+  const [gpExperienceState, setGpExperienceState] = useState<GP_ExperienceState>("default");
 
   //SOUND
   const [bgMusicPlaying, setBGMusicPlaying] = useState<boolean>(false);
@@ -207,6 +213,8 @@ export const ExperienceProvider = ({
         setIsMuted,
         toggleMute,
         playSFX,
+
+        //GOLF SPECIFIC LOGIC
         golfSwingState,
         setGolfSwingState,
         shotType,
@@ -225,6 +233,8 @@ export const ExperienceProvider = ({
         setDissolvingHoles,
         targetIdx,
         setTargetIdx,
+        gpExperienceState,
+        setGpExperienceState,
       }}
     >
       {children}
